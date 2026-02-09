@@ -10,7 +10,7 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://evolution-of-todo-app-hackathon-p2cc.vercel.app"],  # Allows only the frontend origin
+    allow_origins=["http://localhost:3000", "https://evolution-of-todo-app-hackathon-p2c.vercel.app"],  # Allows only the frontend origin
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
