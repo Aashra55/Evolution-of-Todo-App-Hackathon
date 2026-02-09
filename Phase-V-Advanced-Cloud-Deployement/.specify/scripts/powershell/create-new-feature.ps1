@@ -6,6 +6,7 @@ param(
     [string]$ShortName,
     [int]$Number = 0,
     [switch]$Help,
+    [string]$FeatureDescriptionFile, # New parameter to read description from file
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$FeatureDescription
 )
@@ -13,27 +14,37 @@ $ErrorActionPreference = 'Stop'
 
 # Show help if requested
 if ($Help) {
-    Write-Host "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number N] <feature description>"
+    Write-Host "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number N] [-FeatureDescriptionFile <path>] <feature description>"
     Write-Host ""
     Write-Host "Options:"
     Write-Host "  -Json               Output in JSON format"
     Write-Host "  -ShortName <name>   Provide a custom short name (2-4 words) for the branch"
     Write-Host "  -Number N           Specify branch number manually (overrides auto-detection)"
+    Write-Host "  -FeatureDescriptionFile <path> Read feature description from a file"
     Write-Host "  -Help               Show this help message"
     Write-Host ""
     Write-Host "Examples:"
     Write-Host "  ./create-new-feature.ps1 'Add user authentication system' -ShortName 'user-auth'"
+    Write-Host "  ./create-new-feature.ps1 -FeatureDescriptionFile 'path/to/desc.txt' -ShortName 'user-auth'"
     Write-Host "  ./create-new-feature.ps1 'Implement OAuth2 integration for API'"
     exit 0
 }
 
-# Check if feature description provided
-if (-not $FeatureDescription -or $FeatureDescription.Count -eq 0) {
-    Write-Error "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] <feature description>"
+$featureDesc = ""
+if ($FeatureDescriptionFile) {
+    if (Test-Path $FeatureDescriptionFile) {
+        $featureDesc = Get-Content $FeatureDescriptionFile -Raw
+    } else {
+        Write-Error "Error: Feature description file not found: $FeatureDescriptionFile"
+        exit 1
+    }
+} elseif (-not $FeatureDescription -or $FeatureDescription.Count -eq 0) {
+    Write-Error "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number N] [-FeatureDescriptionFile <path>] <feature description>"
+    Write-Error "Error: No feature description provided via argument or file."
     exit 1
+} else {
+    $featureDesc = ($FeatureDescription -join ' ').Trim()
 }
-
-$featureDesc = ($FeatureDescription -join ' ').Trim()
 
 # Resolve repository root. Prefer git information when available, but fall back
 # to searching for repository markers so the workflow still functions in repositories that

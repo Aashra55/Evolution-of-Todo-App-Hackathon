@@ -1,0 +1,48 @@
+# Files to ignore when packaging Helm charts
+# Lines starting with '#' are comments.
+# Lines starting with '!' are exclusions.
+# Lines starting with '\#' are treated as a literal '#'.
+
+# This is a sample .helmignore file
+# You should adapt it to your needs
+
+# Empties files/folders (or removes their content) before package
+# .git
+# .gitignore
+# .helmignore
+# .vscode
+# .idea
+# *.swp
+# *.bak
+# *.tmp
+# *.log
+# tmp/
+# .DS_Store
+
+# Uncomment the lines below to ignore all subdirectories and then remove specific ones for packaging.
+# */
+# !charts/
+# !crds/
+# !templates/
+
+# Example: Ignore package-lock.json, yarn.lock if your chart is not managing node_modules
+package-lock.json
+yarn.lock
+
+# Ignore common build/config artifacts
+node_modules/
+dist/
+build/
+.env
+.env.*
+*.env
+
+# Ignore common editor/IDE artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ignore Git related files
+.git/
+.gitignore

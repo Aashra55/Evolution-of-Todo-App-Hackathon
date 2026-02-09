@@ -1,0 +1,109 @@
+name: CD Workflow - Minikube Deployment
+
+on:
+  push:
+    branches: [ main ] # Trigger on push to main branch
+
+jobs:
+  deploy-to-minikube:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        python-version: [3.11]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # --- Minikube Setup and Docker Configuration ---
+    - name: Setup Minikube
+      uses: actions/setup-node@v3 # Placeholder, Minikube setup might need dedicated action or shell commands
+      with:
+        node-version: ${{ matrix.node-version }}
+      # This step would typically involve starting Minikube, configuring Docker daemon for Minikube
+      # Example using shell commands (actual setup may vary):
+      # - name: Setup Minikube Docker env
+      #   run: eval $(minikube docker-env)
+
+    # --- Frontend Deployment ---
+    - name: Setup Node.js for Frontend
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+      if: matrix.node-version != ''
+
+    - name: Install Frontend dependencies
+      run: cd frontend && npm ci
+      if: matrix.node-version != ''
+
+    - name: Build Frontend Image
+      run: |
+        eval $(minikube docker-env) # Ensure Docker commands use Minikube's daemon
+        cd frontend && docker build -t todo-ai-frontend:latest .
+      if: matrix.node-version != ''
+
+    - name: Deploy Frontend to Minikube
+      run: |
+        docker push todo-ai-frontend:latest # Push to Minikube's Docker daemon
+        kubectl apply -f k8s/frontend/deployment.yaml
+        kubectl apply -f k8s/frontend/service.yaml
+      if: matrix.node-version != ''
+
+    # --- Backend Services Deployment ---
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+      if: matrix.python-version != ''
+
+    - name: Install Backend dependencies
+      run: |
+        cd services/chat-api && pip install --no-cache-dir -r requirements.txt
+        cd ../notification && pip install --no-cache-dir -r requirements.txt
+        cd ../recurring-task && pip install --no-cache-dir -r requirements.txt
+        cd ../audit-log && pip install --no-cache-dir -r requirements.txt
+        cd ../real-time-sync && pip install --no-cache-dir -r requirements.txt
+      if: matrix.python-version != ''
+
+    - name: Build Backend Images
+      run: |
+        cd services/chat-api && docker build -t todo-ai-chat-api:latest .
+        cd ../notification && docker build -t todo-ai-notification:latest .
+        cd ../recurring-task && docker build -t todo-ai-recurring-task:latest .
+        cd ../audit-log && docker build -t todo-ai-audit-log:latest .
+        cd ../real-time-sync && docker build -t todo-ai-real-time-sync:latest .
+      if: matrix.python-version != ''
+
+    - name: Deploy Backend Services to Minikube
+      run: |
+        eval $(minikube docker-env)
+        docker push todo-ai-chat-api:latest
+        docker push todo-ai-notification:latest
+        docker push todo-ai-recurring-task:latest
+        docker push todo-ai-audit-log:latest
+        docker push todo-ai-real-time-sync:latest
+        kubectl apply -f k8s/services/chat-api/deployment.yaml
+        kubectl apply -f k8s/services/chat-api/service.yaml
+        kubectl apply -f k8s/services/notification/deployment.yaml
+        kubectl apply -f k8s/services/notification/service.yaml
+        kubectl apply -f k8s/services/recurring-task/deployment.yaml
+        kubectl apply -f k8s/services/recurring-task/service.yaml
+        kubectl apply -f k8s/services/audit-log/deployment.yaml
+        kubectl apply -f k8s/services/audit-log/service.yaml
+        kubectl apply -f k8s/services/real-time-sync/deployment.yaml
+        kubectl apply -f k8s/services/real-time-sync/service.yaml
+      if: matrix.python-version != ''
+
+    - name: Verify Deployment
+      run: |
+        echo "Verifying deployment..."
+        # Example verification steps: check pod status, service endpoints
+        # This is a simplified check. Real verification might involve health checks.
+        kubectl get pods -A # Check all pods
+        kubectl get services -A # Check all services
+        echo "Deployment verification complete. Manual checks may be required."
+    # This workflow assumes Minikube is set up and accessible.
+    # Further steps like applying Dapr components and Kafka would be added here.

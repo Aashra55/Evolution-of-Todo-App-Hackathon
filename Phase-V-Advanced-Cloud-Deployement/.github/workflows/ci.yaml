@@ -1,0 +1,86 @@
+name: CI Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        python-version: [3.11]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Setup Node.js for Frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Frontend dependencies
+      run: cd frontend && npm ci
+      if: matrix.node-version != '' # Only run for Node.js jobs
+
+    - name: Lint Frontend
+      run: cd frontend && npm run lint
+      if: matrix.node-version != ''
+
+    - name: Build Frontend
+      run: cd frontend && npm run build
+      if: matrix.node-version != ''
+
+    - name: Test Frontend
+      run: cd frontend && npm test
+      if: matrix.node-version != ''
+
+    # Setup Python for Backend Services
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Backend dependencies
+      run: |
+        cd services/chat-api && pip install --no-cache-dir -r requirements.txt
+        cd ../notification && pip install --no-cache-dir -r requirements.txt
+        cd ../recurring-task && pip install --no-cache-dir -r requirements.txt
+        cd ../audit-log && pip install --no-cache-dir -r requirements.txt
+        cd ../real-time-sync && pip install --no-cache-dir -r requirements.txt
+      if: matrix.python-version != ''
+
+    - name: Lint Backend Services
+      run: |
+        cd services/chat-api && ruff check .
+        cd ../notification && ruff check .
+        cd ../recurring-task && ruff check .
+        cd ../audit-log && ruff check .
+        cd ../real-time-sync && ruff check .
+      if: matrix.python-version != ''
+
+    - name: Test Backend Services
+      run: |
+        cd services/chat-api && pytest
+        cd ../notification && pytest
+        cd ../recurring-task && pytest
+        cd ../audit-log && pytest
+        cd ../real-time-sync && pytest
+      if: matrix.python-version != ''
+
+    - name: Build Container Images
+      run: |
+        docker build -t todo-ai-frontend:latest frontend
+        docker build -t todo-ai-chat-api:latest services/chat-api
+        docker build -t todo-ai-notification:latest services/notification
+        docker build -t todo-ai-recurring-task:latest services/recurring-task
+        docker build -t todo-ai-audit-log:latest services/audit-log
+        docker build -t todo-ai-real-time-sync:latest services/real-time-sync
+      # In a real CI/CD, images would be pushed to a registry

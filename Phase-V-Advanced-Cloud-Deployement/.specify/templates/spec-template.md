@@ -80,6 +80,8 @@
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right functional requirements.
+  IMPORTANT: All requirements must adhere to the Project Constitution.
+  Explicitly reference relevant constitutional principles where applicable.
 -->
 
 ### Functional Requirements

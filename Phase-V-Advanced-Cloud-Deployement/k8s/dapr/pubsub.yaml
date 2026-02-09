@@ -1,0 +1,16 @@
+apiVersion: pubsub.dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+  - name: kafkaBrokerList
+    value: "localhost:9092" # Replace with actual Kafka broker address if not local
+  - name: consumerID
+    value: "todo-app-service" # Default consumer ID, can be overridden by service
+  - name: publishMessageExpiry
+    value: "1m" # Optional: message expiry in minutes
+  - name: subscribeToTopic
+    value: "task-events,reminders,task-updates" # Subscribe to relevant topics

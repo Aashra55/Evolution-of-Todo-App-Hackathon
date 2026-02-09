@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+spec:
+  type: state.postgresql # Use PostgreSQL state store
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "host=localhost port=5432 user=your_user password=your_password dbname=your_db" # Placeholder, adjust as needed for local dev or K8s service
+  - name: tableName
+    value: "state" # Default table name, can be configured
+  - name: actorStateStore
+    value: "true" # Enable actor state store if needed, false otherwise

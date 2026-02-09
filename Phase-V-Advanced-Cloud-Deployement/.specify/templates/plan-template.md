@@ -31,7 +31,12 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **I. Free-First Infrastructure**: All infrastructure and services MUST be exclusively free-tier or always-free.
+- [ ] **II. Microservices & Event-Driven Architecture**: The system MUST employ a microservices-based, event-driven architecture using Kafka-style messaging. Services are strongly decoupled via Dapr.
+- [ ] **III. Dapr as Abstraction Layer**: Dapr MUST be used as the mandatory abstraction layer for Pub/Sub, State Management, Service Invocation, Jobs API/Bindings, and Secrets Management. Direct Kafka client libraries are forbidden.
+- [ ] **IV. Swappable Infrastructure & Configuration**: All infrastructure components MUST be swappable via configuration, with no hardcoding of specific providers.
+- [ ] **V. Spec-Driven Development (SDD)**: Development MUST strictly follow the Agentic Dev Stack workflow. Manual coding is forbidden as a primary implementation method.
+- [ ] **VI. CI/CD & Secrets Management**: CI/CD MUST use GitHub Actions (free tier, public repository). Secrets MUST be managed via Kubernetes Secrets and Dapr secretstores.kubernetes.
 
 ## Project Structure
 

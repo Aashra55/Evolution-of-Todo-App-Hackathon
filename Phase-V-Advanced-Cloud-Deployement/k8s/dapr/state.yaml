@@ -1,0 +1,14 @@
+apiVersion: state.dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statestore
+spec:
+  type: state.redis # Using Redis as a common, free-tier compatible state store
+  version: v1
+  metadata:
+  - name: redisHost
+    value: "localhost:6379" # Replace with actual Redis address if not local
+  - name: redisPassword
+    value: "" # Password is not set for local development, configure securely for production
+  - name: actorStateStore
+    value: "true" # Enable actor state store if needed, otherwise set to false

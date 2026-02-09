@@ -1,0 +1,34 @@
+# Node.js
+node_modules/
+dist/
+build/
+*.log
+.env*
+
+# Python (if any Python scripts are used for tooling)
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Kubernetes
+*.secret.yaml
+secrets/
+.kube/
+kubeconfig*
+*.key
+*.crt
+
+# Universal
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

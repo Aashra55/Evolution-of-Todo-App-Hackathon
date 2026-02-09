@@ -1,0 +1,23 @@
+# Helm ignore patterns
+.git/
+.gitignore
+*.swp
+*.swo
+.DS_Store
+tmp/
+logs/
+*.log
+.vscode/
+.idea/
+*.iml
+*.jar
+*.war
+*.ear
+bin/
+obj/
+build/
+target/
+coverage/
+node_modules/
+vendor/
+.env*

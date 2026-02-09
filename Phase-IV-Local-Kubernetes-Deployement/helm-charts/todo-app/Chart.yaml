@@ -1,0 +1,21 @@
+apiVersion: v2
+name: todo-app
+description: A Helm chart for deploying the Todo Chatbot application to Kubernetes.
+
+# AI Agent Action: AI agent is responsible for generating and maintaining this Helm chart.
+# AI agents can also optimize chart configurations, suggest improvements, and ensure best practices.
+# AI Agent Action: Perform Helm lint validation to ensure chart correctness.
+# AI Agent Action: Perform Helm template dry-run validation against Kubernetes API schema.
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into a Kubernetes manifest file.
+# Library charts provide useful utilities or functions for the chart developer.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application.
+appVersion: "1.0.0"

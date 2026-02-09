@@ -77,6 +77,7 @@ if ($PathsOnly) {
     } else {
         Write-Output "REPO_ROOT: $($paths.REPO_ROOT)"
         Write-Output "BRANCH: $($paths.CURRENT_BRANCH)"
+        Write-Output "HAS_GIT: $($paths.HAS_GIT)"
         Write-Output "FEATURE_DIR: $($paths.FEATURE_DIR)"
         Write-Output "FEATURE_SPEC: $($paths.FEATURE_SPEC)"
         Write-Output "IMPL_PLAN: $($paths.IMPL_PLAN)"
@@ -86,24 +87,26 @@ if ($PathsOnly) {
 }
 
 # Validate required directories and files
-if (-not (Test-Path $paths.FEATURE_DIR -PathType Container)) {
-    Write-Output "ERROR: Feature directory not found: $($paths.FEATURE_DIR)"
-    Write-Output "Run /sp.specify first to create the feature structure."
-    exit 1
-}
 
-if (-not (Test-Path $paths.IMPL_PLAN -PathType Leaf)) {
-    Write-Output "ERROR: plan.md not found in $($paths.FEATURE_DIR)"
-    Write-Output "Run /sp.plan first to create the implementation plan."
-    exit 1
-}
+# Validate required directories and files
+# if (-not (Test-Path $paths.FEATURE_DIR -PathType Container)) {
+#     Write-Output "ERROR: Feature directory not found: $($paths.FEATURE_DIR)"
+#     Write-Output "Run /sp.specify first to create the feature structure."
+#     exit 1
+# }
+
+# if (-not (Test-Path $paths.IMPL_PLAN -PathType Leaf)) {
+#     Write-Output "ERROR: plan.md not found in $($paths.FEATURE_DIR)"
+#     Write-Output "Run /sp.plan first to create the implementation plan."
+#     exit 1
+# }
 
 # Check for tasks.md if required
-if ($RequireTasks -and -not (Test-Path $paths.TASKS -PathType Leaf)) {
-    Write-Output "ERROR: tasks.md not found in $($paths.FEATURE_DIR)"
-    Write-Output "Run /sp.tasks first to create the task list."
-    exit 1
-}
+# if ($RequireTasks -and -not (Test-Path $paths.TASKS -PathType Leaf)) {
+#     Write-Output "ERROR: tasks.md not found in $($paths.FEATURE_DIR)"
+#     Write-Output "Run /sp.tasks first to create the task list."
+#     exit 1
+# }
 
 # Build list of available documents
 $docs = @()

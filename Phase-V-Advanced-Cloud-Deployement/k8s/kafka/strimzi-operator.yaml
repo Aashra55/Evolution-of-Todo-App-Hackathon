@@ -1,0 +1,20 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: OperatorGroup
+metadata:
+  name: strimzi-operators
+  namespace: kafka
+spec:
+  targetNamespaces:
+  - kafka
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: strimzi-kafka-operator
+  namespace: kafka
+spec:
+  channel: "stable" # or choose a specific channel
+  installPlanApproval: Automatic
+  name: strimzi-kafka-operator
+  source: community-operators # Or the correct catalog source name
+  sourceNamespace: olm

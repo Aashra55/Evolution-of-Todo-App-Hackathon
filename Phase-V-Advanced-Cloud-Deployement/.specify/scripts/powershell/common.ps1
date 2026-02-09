@@ -2,6 +2,20 @@
 # Common PowerShell functions analogous to common.sh
 
 function Get-RepoRoot {
+    # 1. Check for .specify folder in current directory or parents
+    $currentDir = Get-Location
+    while ($true) {
+        if (Test-Path (Join-Path $currentDir ".specify")) {
+            return $currentDir.Path
+        }
+        $parent = Split-Path $currentDir.Path -Parent
+        if ($parent -eq $currentDir.Path) {
+            break # Reached root without finding .specify
+        }
+        $currentDir = $parent
+    }
+
+    # 2. Fallback to git rev-parse --show-toplevel
     try {
         $result = git rev-parse --show-toplevel 2>$null
         if ($LASTEXITCODE -eq 0) {
@@ -11,7 +25,7 @@ function Get-RepoRoot {
         # Git command failed
     }
     
-    # Fall back to script location for non-git repos
+    # 3. Fall back to script location for non-git repos (original logic)
     return (Resolve-Path (Join-Path $PSScriptRoot "../../..")).Path
 }
 

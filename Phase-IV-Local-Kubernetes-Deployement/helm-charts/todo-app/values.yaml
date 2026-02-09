@@ -1,0 +1,100 @@
+# Default values for todo-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+frontend:
+  image:
+    repository: todo-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  ingress:
+    enabled: false
+    annotations: {}
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+  # Additional frontend deployment configurations
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  imagePullSecrets: []
+  podSecurityContext: {}
+    # fsGroup: 2000
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  volumeMounts: []
+  volumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+backend:
+  image:
+    repository: todo-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  env:
+    DB_USER: postgres
+    DB_HOST: postgres-service
+    DB_NAME: todoapp
+    DB_PASSWORD: mysecretpassword
+    DB_PORT: 5432
+    JWT_SECRET: supersecretjwtkey
+  # Additional backend deployment configurations
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  imagePullSecrets: []
+  podSecurityContext: {}
+  securityContext: {}
+  resources: {}
+  volumeMounts: []
+  volumes: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: 13
+    pullPolicy: IfNotPresent
+  postgresqlUsername: postgres
+  postgresqlPassword: mysecretpassword
+  postgresqlDatabase: todoapp
+
+serviceAccount:
+  create: true
+  name: ""

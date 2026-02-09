@@ -1,0 +1,41 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: kafka-cluster
+  namespace: kafka
+spec:
+  kafka:
+    version: 3.6.1 # Or desired Kafka version
+    replicas: 3
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls:
+          - enabled: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls:
+          - enabled: true
+    config:
+      offsetsTopicReplicationFactor: 3
+      transactionStateLogReplicationFactor: 3
+      transactionStateLogSegmentIntervalMs: 60000
+    storage:
+      type: jbod
+      volumes:
+        - mountPath: /kafka-logs
+          size: 100Gi # Adjust size as needed
+          type: persistent-claim
+  zookeeper:
+    replicas: 3
+    storage:
+      type: persistent-claim
+      volumes:
+        - mountPath: /var/lib/zookeeper
+          size: 50Gi
+          type: persistent-claim
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

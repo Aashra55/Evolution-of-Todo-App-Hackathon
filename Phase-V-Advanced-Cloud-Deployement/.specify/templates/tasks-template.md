@@ -8,6 +8,8 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
+**Note**: Adherence to the Project Constitution's "Spec-Driven Development (SDD)" principle is mandatory. All tasks must stem from an approved specification.
+
 **Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
@@ -46,7 +48,7 @@ description: "Task list template for feature implementation"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Project initialization and basic structure. Refer to the Project Constitution for "Free-First Infrastructure" and "Swappable Infrastructure & Configuration" principles.
 
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
@@ -56,7 +58,7 @@ description: "Task list template for feature implementation"
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented. Refer to the Project Constitution for "Microservices & Event-Driven Architecture" and "Dapr as Abstraction Layer" principles.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 

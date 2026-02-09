@@ -1,0 +1,447 @@
+openapi: 3.0.0
+info:
+  title: Todo AI Chat API Service
+  version: 1.0.0
+  description: API for managing todo tasks and interacting with the AI chatbot. All calls are secured via Dapr mTLS and invoked via Dapr Service Invocation. Authentication/Authorization details are handled by Dapr/underlying platform.
+servers:
+  - url: /v1.0/invoke/chat-api/method
+    description: Dapr Service Invocation Endpoint for Chat API
+paths:
+  /tasks:
+    get:
+      summary: Retrieve a list of tasks
+      description: Returns a list of tasks for the authenticated user, with optional filtering, sorting, and pagination.
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, completed, in_progress, cancelled]
+          description: Filter tasks by status
+        - in: query
+          name: priority
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+          description: Filter tasks by priority
+        - in: query
+          name: tags
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter tasks by tags (comma-separated)
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Full-text search across task titles and descriptions
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            enum: [createdAt, dueDate, priority]
+          description: Field to sort tasks by
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order (ascending or descending)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of tasks to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Offset for pagination
+      responses:
+        '200':
+          description: A list of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Create a new task
+      description: Creates a new task for the authenticated user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+  /tasks/{task_id}:
+    get:
+      summary: Retrieve a single task
+      parameters:
+        - in: path
+          name: task_id
+          schema:
+            type: string
+          required: true
+          description: ID of the task to retrieve
+      responses:
+        '200':
+          description: A single task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+    put:
+      summary: Update an existing task
+      parameters:
+        - in: path
+          name: task_id
+          schema:
+            type: string
+          required: true
+          description: ID of the task to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+    delete:
+      summary: Delete a task
+      parameters:
+        - in: path
+          name: task_id
+          schema:
+            type: string
+          required: true
+          description: ID of the task to delete
+      responses:
+        '204':
+          description: Task deleted successfully
+        '404':
+          description: Task not found
+  /tasks/{task_id}/complete:
+    post:
+      summary: Mark a task as complete
+      parameters:
+        - in: path
+          name: task_id
+          schema:
+            type: string
+          required: true
+          description: ID of the task to mark as complete
+      responses:
+        '200':
+          description: Task marked as complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+  /chat:
+    post:
+      summary: Send a chat message to the AI chatbot
+      description: Processes natural language input to perform task operations or retrieve information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessage'
+      responses:
+        '200':
+          description: AI chatbot response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+  /reminders:
+    post:
+      summary: Schedule a new reminder for a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleReminderRequest'
+      responses:
+        '202':
+          description: Reminder scheduled
+        '404':
+          description: Task not found
+  /recurring-tasks:
+    post:
+      summary: Define a new recurring task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefineRecurringTaskRequest'
+      responses:
+        '201':
+          description: Recurring task defined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, completed, in_progress, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        reminderSettings:
+          type: object
+          properties:
+            remindAt:
+              type: string
+              format: date-time
+            channel:
+              type: string
+              enum: [chat, email, app_notification]
+          nullable: true
+        recurrencePattern:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [daily, weekly, monthly, yearly, custom]
+            interval:
+              type: integer
+              nullable: true
+            daysOfWeek:
+              type: array
+              items:
+                type: string
+              nullable: true
+            dayOfMonth:
+              type: integer
+              nullable: true
+            endDate:
+              type: string
+              format: date-time
+              nullable: true
+          nullable: true
+        userId:
+          type: string
+          format: uuid
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          default: medium
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        reminderSettings:
+          $ref: '#/components/schemas/ReminderSettingsInput'
+        recurrencePattern:
+          $ref: '#/components/schemas/RecurrencePatternInput'
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, completed, in_progress, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        reminderSettings:
+          $ref: '#/components/schemas/ReminderSettingsInput'
+        recurrencePattern:
+          $ref: '#/components/schemas/RecurrencePatternInput'
+    ReminderSettingsInput:
+      type: object
+      required:
+        - remindAt
+      properties:
+        remindAt:
+          type: string
+          format: date-time
+        channel:
+          type: string
+          enum: [chat, email, app_notification]
+          default: chat
+    RecurrencePatternInput:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [daily, weekly, monthly, yearly, custom]
+        interval:
+          type: integer
+          nullable: true
+        daysOfWeek:
+          type: array
+          items:
+            type: string
+          nullable: true
+        dayOfMonth:
+          type: integer
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+    ChatMessage:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: User's chat message in natural language.
+        sessionId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Optional session ID for conversational context.
+    ChatResponse:
+      type: object
+      required:
+        - response
+      properties:
+        response:
+          type: string
+          description: AI chatbot's natural language response.
+        parsedIntent:
+          type: object
+          nullable: true
+          description: Structured representation of the AI's understanding of user intent.
+        suggestedActions:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Suggested follow-up actions for the user.
+    ScheduleReminderRequest:
+      type: object
+      required:
+        - taskId
+        - remindAt
+      properties:
+        taskId:
+          type: string
+          format: uuid
+        remindAt:
+          type: string
+          format: date-time
+        channel:
+          type: string
+          enum: [chat, email, app_notification]
+          default: chat
+    DefineRecurringTaskRequest:
+      type: object
+      required:
+        - title
+        - recurrencePattern
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          default: medium
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        recurrencePattern:
+          $ref: '#/components/schemas/RecurrencePatternInput'
