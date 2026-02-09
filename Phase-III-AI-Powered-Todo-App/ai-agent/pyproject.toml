@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "ai-agent"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+openai-agents = "^0.1.0" # Assuming this is the OpenAI Agents SDK
+uvicorn = {extras = ["standard"], version = "^0.27.0.post1"} # Possibly needed for local agent serving/testing
+fastapi = "^0.109.0" # To expose agent as a service if needed, or integrate with backend
+psycopg2-binary = "^2.9.9" # If agent needs direct DB access (though spec says no, may need for conversation state)
+httpx = "^0.27.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

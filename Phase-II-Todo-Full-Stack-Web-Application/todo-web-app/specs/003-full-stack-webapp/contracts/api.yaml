@@ -1,0 +1,229 @@
+openapi: 3.0.3
+info:
+  title: "Todo Web App API"
+  version: "1.0.0"
+  description: "API for a multi-user full-stack web application to manage tasks."
+paths:
+  /auth/signup:
+    post:
+      summary: "Create a new user"
+      tags:
+        - "Authentication"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "201":
+          description: "User created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Email already registered"
+  /auth/token:
+    post:
+      summary: "Get an access token for a user"
+      tags:
+        - "Authentication"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: "Access token created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        "401":
+          description: "Incorrect username or password"
+  /tasks/:
+    get:
+      summary: "List all tasks for the current user"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      responses:
+        "200":
+          description: "A list of tasks"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      summary: "Create a new task"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskCreate"
+      responses:
+        "201":
+          description: "Task created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /tasks/{task_id}:
+    get:
+      summary: "Get a specific task by ID"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Task details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "Task not found"
+    put:
+      summary: "Update a task by ID"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdate"
+      responses:
+        "200":
+          description: "Task updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "Task not found"
+    delete:
+      summary: "Delete a task by ID"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: "Task deleted successfully"
+        "404":
+          description: "Task not found"
+  /tasks/{task_id}/toggle-complete:
+    patch:
+      summary: "Toggle the completion status of a task"
+      security:
+        - bearerAuth: []
+      tags:
+        - "Tasks"
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Task status toggled successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "Task not found"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+    UserCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        completed:
+          type: boolean
+    TaskCreate:
+      type: object
+      properties:
+        description:
+          type: string
+    TaskUpdate:
+      type: object
+      properties:
+        description:
+          type: string
+        completed:
+          type: boolean
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

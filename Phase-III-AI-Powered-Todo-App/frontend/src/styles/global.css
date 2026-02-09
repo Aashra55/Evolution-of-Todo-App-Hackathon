@@ -1,0 +1,196 @@
+/* Global styles for Todo AI Chatbot UI */
+
+/* Basic reset */
+body, h1, h2, p, div, form, input, button {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f7f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main Layout */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.app-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #fcfcfc;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  color: #3f51b5; /* A primary blue tone */
+}
+
+.content-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden; /* For internal scrolling */
+}
+
+.todo-sidebar {
+  flex: 0 0 300px; /* Fixed width */
+  border-right: 1px solid #eee;
+  padding: 20px;
+  background-color: #f9f9f9;
+  overflow-y: auto; /* Scrollable if todos overflow */
+}
+
+.chat-main {
+  flex: 1; /* Takes remaining space */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto; /* Scrollable if chat overflows */
+}
+
+.app-footer {
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
+  background-color: #fcfcfc;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Chat Window */
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.chat-message.user {
+  background-color: #e0f2f7; /* Light blue for user */
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat-message.bot, .chat-message.system {
+  background-color: #e8e8e8; /* Light gray for bot/system */
+  margin-right: auto;
+  text-align: left;
+}
+
+/* Chat Input */
+.chat-input-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.send-button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.send-button:hover {
+  background-color: #303f9f;
+}
+
+/* Todo List */
+.todo-list {
+  margin-top: 20px;
+}
+
+.todo-list h2 {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-description {
+  flex: 1;
+  font-weight: 500;
+}
+
+.todo-status {
+  margin-left: 10px;
+  font-size: 0.9em;
+  color: #777;
+}
+
+.todo-item.completed .todo-description {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* Empty, Error, Loading States */
+.empty-state, .error-message, .loading-indicator {
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.empty-state {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.error-message {
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.loading-indicator {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
