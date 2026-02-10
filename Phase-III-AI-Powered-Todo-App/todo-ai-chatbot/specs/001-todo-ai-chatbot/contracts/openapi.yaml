@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: Todo AI Chatbot API
+  version: 1.0.0
+  description: API for interacting with the AI-powered todo chatbot via natural language.
+
+servers:
+  - url: /api/{user_id}
+    description: Chatbot API for a specific user.
+    variables:
+      user_id:
+        default: "default_user_id"
+        description: The UUID of the user.
+
+paths:
+  /chat:
+    post:
+      summary: Process natural language chat messages and manage todo tasks.
+      description: Sends a user message to the AI chatbot and receives a natural language response, potentially including details of tool calls for task management.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The UUID of the user initiating the chat.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversation_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: Optional. ID of an existing conversation. If omitted, a new one is started.
+                message:
+                  type: string
+                  description: The user's natural language message.
+              required:
+                - message
+      responses:
+        '200':
+          description: Successful response from the AI chatbot.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversation_id:
+                    type: string
+                    format: uuid
+                    description: ID of the conversation.
+                  response:
+                    type: string
+                    description: AI Agent's natural language reply.
+                  tool_calls:
+                    type: array
+                    items:
+                      type: object
+                      description: Details of a tool call made by the agent. (Further detailed schema can be added here if tool call structure is known)
+                    nullable: true
+                    description: Optional. Details of any tool calls made by the agent.
+        '400':
+          description: Invalid request or input.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "Invalid message format or missing required fields."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: "An unexpected error occurred on the server."

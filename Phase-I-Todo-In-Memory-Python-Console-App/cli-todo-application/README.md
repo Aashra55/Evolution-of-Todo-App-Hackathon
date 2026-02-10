@@ -11,14 +11,35 @@ A simple command-line todo application that stores tasks in memory.
 - Mark tasks as incomplete
 - Remove tasks by ID
 
+## Tech Stack
+
+-   **Language**: Python
+-   **Runtime Dependencies**: None (pure Python standard library)
+-   **Development/Testing Dependencies**: `pytest` for testing, `flake8` for linting.
+-   **Application Type**: Command-Line Interface (CLI)
+
+## Project Structure
+
+-   `src/`: Contains the core application source code.
+    -   `cli/`: Command-line interface entry point (`main.py`).
+    -   `models/`: Data models for the application (e.g., `task.py`).
+    -   `services/`: Business logic and core functionalities (e.g., `task_manager.py`).
+-   `tests/`: Contains automated tests for the application.
+    -   `integration/`: Integration tests that verify interactions between different components.
+    -   `unit/`: Unit tests for individual functions and classes.
+-   `.venv/`: Python virtual environment for managing dependencies.
+-   `.gemini/`, `.specify/`: Configuration and scripts for the Gemini CLI agent.
+-   `history/`, `specs/`: Directories related to Spec-Driven Development (SDD) artifacts.
+-   `pyproject.toml`: Project configuration for Python.
+-   `README.md`: Project overview and documentation.
+
 ## Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/cli-todo-app.git
+    git clone https://github.com/Aashra55/Evolution-of-Todo-App-Hackathon/tree/main/Phase-I-Todo-In-Memory-Python-Console-App
     cd cli-todo-app
     ```
-    (Replace `https://github.com/your-username/cli-todo-app.git` with your actual repository URL)
 
 2.  **Create a virtual environment:**
     ```bash
@@ -26,11 +47,11 @@ A simple command-line todo application that stores tasks in memory.
     ```
 
 3.  **Activate the virtual environment:**
-    -   **Windows:**
-        ```bash
-        .venv\Scripts\activate
+    -   **Windows (PowerShell):**
+        ```powershell
+        .\.venv\Scripts\Activate.ps1
         ```
-    -   **macOS/Linux:**
+    -   **macOS/Linux (Bash/Zsh):**
         ```bash
         source .venv/bin/activate
         ```
