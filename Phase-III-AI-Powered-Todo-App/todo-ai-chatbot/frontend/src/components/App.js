@@ -99,16 +99,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900 text-gray-200">
-      <header className="bg-gray-800 text-cyan-400 p-4 shadow-lg border-b border-cyan-500">
-        <h1 className="text-3xl font-extrabold text-center tracking-wide drop-shadow-lg">AI-powered Todo Chatbot</h1>
+    <div className="min-h-screen flex flex-col dark-background light-text">
+      <header className="py-4 px-6 shadow-lg">
+        <h1 className="text-3xl font-extrabold text-center tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
       </header>
       <div className="flex flex-1 flex-col md:flex-row main-content">
-        <div className="flex flex-col flex-grow md:flex-grow-0 md:w-2/3 border-r border-gray-700 chat-section">
+        <div className="flex flex-col flex-grow md:flex-grow-0 md:w-2/3 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
-        <aside className="w-full md:w-1/3 p-4 bg-gray-800 task-panel-section border-t md:border-t-0 md:border-l border-fuchsia-500">
+        <aside className="w-full md:w-1/3 p-4 dark-surface task-panel-section">
           <TaskListPanel tasks={tasks} />
         </aside>
       </div>

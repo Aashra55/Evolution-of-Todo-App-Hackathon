@@ -10,7 +10,7 @@ const Notification = ({ message, type, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className={`p-3 rounded-lg shadow-lg flex justify-between items-center transition-opacity duration-300 ${type === 'success' ? 'bg-gray-800 border-cyan-500 text-cyan-400 shadow-cyan-500/50' : type === 'error' ? 'bg-gray-800 border-fuchsia-500 text-fuchsia-400 shadow-fuchsia-500/50' : 'bg-gray-700 border-gray-400 text-gray-100 shadow-gray-500/50'}`}>
+    <div className={`p-3 rounded-lg flex justify-between items-center transition-opacity duration-300 ${type === 'success' ? 'neon-notification-success' : type === 'error' ? 'neon-notification-error' : 'neon-notification-info'}`}>
       <span className="text-sm font-medium">{message}</span>
       <button onClick={onClose} className="ml-4 text-lg font-bold text-gray-400 hover:text-gray-200 focus:outline-none">&times;</button>
     </div>
