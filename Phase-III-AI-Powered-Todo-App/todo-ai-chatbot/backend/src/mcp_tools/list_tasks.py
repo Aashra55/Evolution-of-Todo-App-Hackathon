@@ -2,7 +2,7 @@
 from typing import Dict, Any, List, Optional
 from uuid import UUID
 from sqlmodel import Session, select
-from backend.src.models.task import Task
+from src.models.task import Task
 
 def list_tasks(session: Session, user_id: UUID, completed: Optional[bool] = None) -> Dict[str, Any]:
     """

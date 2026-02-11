@@ -26,10 +26,10 @@ function ChatDisplay({ messages }) {
   };
 
   return (
-    <div className="chat-display-area">
+    <div className="flex-1 p-4 overflow-y-auto bg-white rounded-lg shadow-inner">
       {messages.map((msg, index) => (
-        <div key={index} className={`message ${msg.sender}`}>
-          <strong>{msg.sender}:</strong> {renderMessageContent(msg)}
+        <div key={index} className={`mb-2 p-3 rounded-lg max-w-xs ${msg.sender === 'user' ? 'ml-auto bg-indigo-500 text-white' : 'mr-auto bg-gray-200 text-gray-800'}`}>
+          <strong>{msg.sender === 'user' ? '👤' : '🤖'}:</strong> {renderMessageContent(msg)}
         </div>
       ))}
     </div>

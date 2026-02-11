@@ -2,7 +2,7 @@
 from typing import Dict, Any
 from uuid import UUID
 from sqlmodel import Session, select
-from backend.src.models.task import Task
+from src.models.task import Task
 
 def delete_task(session: Session, user_id: UUID, task_id: UUID) -> Dict[str, Any]:
     """

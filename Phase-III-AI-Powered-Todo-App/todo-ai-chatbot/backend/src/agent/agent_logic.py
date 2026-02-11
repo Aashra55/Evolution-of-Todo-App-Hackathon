@@ -7,13 +7,13 @@ from uuid import UUID
 from sqlmodel import Session
 from fastapi import Depends # Added for get_todo_agent
 
-from backend.src.agent.init import OpenAIAgentManager, get_openai_agent_manager
-from backend.src.config.database import get_session
-from backend.src.mcp_tools.add_task import add_task, add_task_tool_schema
-from backend.src.mcp_tools.list_tasks import list_tasks, list_tasks_tool_schema # Import list_tasks
-from backend.src.mcp_tools.complete_task import complete_task, complete_task_tool_schema # Import complete_task
-from backend.src.mcp_tools.delete_task import delete_task, delete_task_tool_schema # Import delete_task
-from backend.src.mcp_tools.update_task import update_task, update_task_tool_schema # Import update_task
+from src.agent.init import OpenAIAgentManager, get_openai_agent_manager
+from src.config.database import get_session
+from src.mcp_tools.add_task import add_task, add_task_tool_schema
+from src.mcp_tools.list_tasks import list_tasks, list_tasks_tool_schema # Import list_tasks
+from src.mcp_tools.complete_task import complete_task, complete_task_tool_schema # Import complete_task
+from src.mcp_tools.delete_task import delete_task, delete_task_tool_schema # Import delete_task
+from src.mcp_tools.update_task import update_task, update_task_tool_schema # Import update_task
 
 class TodoAgent:
     def __init__(self, agent_manager: OpenAIAgentManager, session: Session):

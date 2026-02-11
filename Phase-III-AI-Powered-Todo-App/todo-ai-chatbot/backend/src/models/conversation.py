@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel, Relationship
 
 class Conversation(SQLModel, table=True):
-    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     user_id: UUID = Field(index=True) # Foreign key to a User model if it existed
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow, nullable=False)
     updated_at: datetime.datetime = Field(default_factory=datetime.datetime.utcnow, nullable=False)

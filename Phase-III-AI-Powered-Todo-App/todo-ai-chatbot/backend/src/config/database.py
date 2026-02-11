@@ -5,9 +5,9 @@ from typing import Generator
 from sqlmodel import create_engine, Session, SQLModel
 
 # Import your models here to ensure they are registered with SQLModel metadata
-from backend.src.models.task import Task
-from backend.src.models.conversation import Conversation
-from backend.src.models.message import Message
+from src.models.task import Task
+from src.models.conversation import Conversation
+from src.models.message import Message
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@host:port/dbname")
 

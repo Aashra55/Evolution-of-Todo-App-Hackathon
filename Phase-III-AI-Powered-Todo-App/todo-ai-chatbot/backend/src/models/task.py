@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
 
 class Task(SQLModel, table=True):
-    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     user_id: UUID = Field(index=True) # Assuming user_id is also part of a composite primary key or indexed
     title: str = Field(index=True)
     description: Optional[str] = None

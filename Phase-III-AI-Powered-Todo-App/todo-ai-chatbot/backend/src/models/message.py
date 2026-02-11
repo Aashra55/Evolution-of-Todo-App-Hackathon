@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel, Relationship
 
 class Message(SQLModel, table=True):
-    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    id: UUID | None = Field(default_factory=uuid4, primary_key=True)
     user_id: UUID = Field(index=True) # Foreign key to a User model if it existed
     conversation_id: UUID = Field(foreign_key="conversation.id")
     role: str # e.g., "user", "assistant", "tool"

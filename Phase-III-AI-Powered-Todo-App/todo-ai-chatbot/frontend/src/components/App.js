@@ -99,16 +99,16 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="app-header">
-        <h1>AI-powered Todo Chatbot</h1>
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+      <header className="bg-indigo-600 text-white p-4 shadow-md">
+        <h1 className="text-2xl font-bold text-center">AI-powered Todo Chatbot</h1>
       </header>
-      <div className="main-content">
-        <div className="chat-section">
+      <div className="flex flex-1 flex-col md:flex-row main-content">
+        <div className="flex flex-col flex-grow md:flex-grow-0 md:w-2/3 border-r border-gray-200 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
-        <aside className="task-panel-section">
+        <aside className="w-full md:w-1/3 p-4 bg-gray-100 task-panel-section">
           <TaskListPanel tasks={tasks} />
         </aside>
       </div>

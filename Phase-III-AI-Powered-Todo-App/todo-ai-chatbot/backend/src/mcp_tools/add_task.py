@@ -2,7 +2,7 @@
 from typing import Dict, Any
 from uuid import UUID
 from sqlmodel import Session
-from backend.src.models.task import Task
+from src.models.task import Task
 
 def add_task(session: Session, user_id: UUID, title: str, description: str = None) -> Dict[str, Any]:
     """

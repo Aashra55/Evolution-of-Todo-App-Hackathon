@@ -38,6 +38,7 @@ The application is built with a robust and scalable tech stack:
 
 *   **Framework**: Next.js (used for project structure, but currently plain React components)
 *   **Library**: React, React-DOM
+*   **Styling**: Tailwind CSS (via CDN for simplicity, as per user's request)
 *   **UI/UX**: Custom components based on functional requirements
 *   **HTTP Client**: Axios
 *   **UUID Generation**: `uuid`
