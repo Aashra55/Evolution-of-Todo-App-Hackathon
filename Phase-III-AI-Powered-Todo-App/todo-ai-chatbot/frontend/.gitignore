@@ -11,8 +11,6 @@ env/
 dist/
 *.egg-info/
 build/
-.next
-.next/
 
 # Node.js
 node_modules/
@@ -44,3 +42,5 @@ Dockerfile.venv # For multi-stage builds if applicable
 
 # Gemini CLI
 .gemini/
+
+.next/
