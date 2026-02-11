@@ -1,0 +1,46 @@
+# Gitignore for AI-powered Todo App
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.env
+.flaskenv
+dist/
+*.egg-info/
+build/
+.next
+.next/
+
+# Node.js
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# IDEs and Tools
+.vscode/
+.idea/
+*.swp
+*.tmp
+*.bak
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.dockerignore
+Dockerfile.venv # For multi-stage builds if applicable
+*.log*
+
+# Gemini CLI
+.gemini/

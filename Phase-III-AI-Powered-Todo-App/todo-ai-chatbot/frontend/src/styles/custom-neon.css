@@ -101,22 +101,18 @@ body {
     flex: 1;
 }
 /* Responsive utilities - might need to be explicitly written if not relying on Tailwind build */
-/* Notifications specific styles */
-.neon-notification-success {
-    background-color: var(--color-dark-surface);
-    border: 1px solid var(--color-success);
-    color: var(--color-success);
-    box-shadow: 0 0 5px var(--color-success);
+@media (min-width: 768px) {
+    .md\:flex-row {
+        flex-direction: row;
+    }
+    .md\:w-2\/3 {
+        width: 66.666667%;
+    }
+    .md\:border-l {
+        border-left-width: 1px;
+    }
+    /* Add other responsive classes as needed */
 }
-
-.no-border {
-    border: none !important;
-}
-
-.no-main-border {
-    border: none !important;
-}
-
 
 /* ChatInput specific styles */
 .neon-input {
@@ -138,20 +134,16 @@ body {
     font-weight: bold;
     border-radius: 0.5rem; /* Equivalent to Tailwind rounded-lg */
     outline: none;
-    box-shadow: var(--neon-primary-glow);
-    font-family: 'Space Mono', monospace; /* Explicitly set font */
+    box-shadow: var(--neon-primary-glow); /* Base shadow */
 }
 .neon-button:hover {
     background-color: var(--color-neon-secondary-dark); /* AI bot message background on hover */
     color: var(--color-white-text); /* White text color on hover */
-    box-shadow: var(--neon-secondary-glow);
-}
-.neon-button:focus {
-    box-shadow: var(--neon-secondary-glow);
+    box-shadow: var(--neon-secondary-glow); /* Hover shadow */
 }
 
 .task-panel-wrapper {
-  background-color: var(--color-dark-surface); /* Opaque dark surface background for task panel */
+  background-color: var(--color-dark-surface); /* Opaque dark grey background for task panel */
   border: none; /* Remove border from task panel */
 }
 
@@ -160,6 +152,7 @@ body {
     background-color: var(--color-neon-primary-dark); /* Darker cyan for user */
     color: var(--color-dark-gray-text); /* Set user message text to gray */
     box-shadow: var(--neon-primary-glow);
+    border: 1px solid var(--color-neon-primary);
 }
 
 .chat-display-wrapper {
@@ -172,6 +165,7 @@ body {
     background-color: var(--color-neon-secondary-dark); /* Darker fuchsia for AI */
     color: var(--color-light-text); /* Will be overridden by neon-light-text */
     box-shadow: var(--neon-secondary-glow);
+    border: 1px solid var(--color-neon-secondary);
 }
 
 /* Notifications specific styles */
@@ -181,15 +175,6 @@ body {
     color: var(--color-success);
     box-shadow: 0 0 5px var(--color-success);
 }
-
-.no-border {
-    border: none !important;
-}
-
-.no-main-border {
-    border: none !important;
-}
-
 
 .neon-notification-error {
     background-color: var(--color-dark-surface);
