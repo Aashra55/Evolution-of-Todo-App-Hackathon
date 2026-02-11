@@ -27,7 +27,7 @@ function ChatDisplay({ messages }) {
   };
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto dark-surface text-light-text rounded-lg neon-glow-secondary">
+    <div className="flex-1 p-4 overflow-y-auto chat-display-wrapper neon-glow-secondary-no-border">
       {messages.map((msg, index) => (
         <div key={index} className={`mb-3 p-3 rounded-lg max-w-sm ${msg.sender === 'user' ? 'ml-auto neon-user-message' : 'mr-auto neon-ai-message'}`}>
           <div className="flex items-center mb-1 font-bold">

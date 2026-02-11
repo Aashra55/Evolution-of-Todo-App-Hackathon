@@ -103,8 +103,8 @@ function App() {
       <header className="py-4 px-6 shadow-lg">
         <h1 className="text-3xl font-extrabold text-center tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
       </header>
-      <div className="flex flex-1 flex-col md:flex-row main-content">
-        <div className="flex flex-col flex-grow md:flex-grow-0 md:w-2/3 chat-section">
+      <div className="flex flex-1 md:flex-row main-content">
+        <div className="flex flex-col flex-grow md:w-2/3 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>

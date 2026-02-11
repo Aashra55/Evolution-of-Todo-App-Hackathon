@@ -47,7 +47,10 @@ body {
 
 .neon-glow-secondary {
   box-shadow: var(--neon-secondary-glow);
-  border-color: var(--color-neon-secondary);
+}
+
+.neon-glow-secondary-no-border {
+  box-shadow: var(--neon-secondary-glow);
 }
 
 .neon-text-glow-primary {
@@ -98,18 +101,22 @@ body {
     flex: 1;
 }
 /* Responsive utilities - might need to be explicitly written if not relying on Tailwind build */
-@media (min-width: 768px) {
-    .md\:flex-row {
-        flex-direction: row;
-    }
-    .md\:w-2\/3 {
-        width: 66.666667%;
-    }
-    .md\:border-l {
-        border-left-width: 1px;
-    }
-    /* Add other responsive classes as needed */
+/* Notifications specific styles */
+.neon-notification-success {
+    background-color: var(--color-dark-surface);
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
+    box-shadow: 0 0 5px var(--color-success);
 }
+
+.no-border {
+    border: none !important;
+}
+
+.no-main-border {
+    border: none !important;
+}
+
 
 /* ChatInput specific styles */
 .neon-input {
@@ -134,26 +141,35 @@ body {
     box-shadow: var(--neon-primary-glow);
 }
 .neon-button:hover {
-    background-color: var(--color-neon-primary-light);
+    background-color: var(--color-neon-secondary-light); /* Lighter purplish background on hover to match glow better */
     box-shadow: var(--neon-secondary-glow);
 }
 .neon-button:focus {
     box-shadow: var(--neon-secondary-glow);
 }
 
+.task-panel-wrapper {
+  background-color: rgba(60, 0, 60, 0.5); /* Light purplish background for task panel */
+  border: none; /* Remove border from task panel */
+}
+
 /* ChatDisplay specific styles */
 .neon-user-message {
     background-color: var(--color-neon-primary-dark); /* Darker cyan for user */
-    color: var(--color-light-text);
+    color: var(--color-dark-gray-text); /* Set user message text to gray */
     box-shadow: var(--neon-primary-glow);
-    border: 1px solid var(--color-neon-primary);
+}
+
+.chat-display-wrapper {
+  background-color: rgba(26, 26, 26, 0.5); /* Very light background for chat div */
+  margin-left: 1rem; /* Left margin for chat div */
+  border: none; /* Remove border from chat div */
 }
 
 .neon-ai-message {
     background-color: var(--color-neon-secondary-dark); /* Darker fuchsia for AI */
     color: var(--color-light-text); /* Will be overridden by neon-light-text */
     box-shadow: var(--neon-secondary-glow);
-    border: 1px solid var(--color-neon-secondary);
 }
 
 /* Notifications specific styles */
@@ -163,6 +179,15 @@ body {
     color: var(--color-success);
     box-shadow: 0 0 5px var(--color-success);
 }
+
+.no-border {
+    border: none !important;
+}
+
+.no-main-border {
+    border: none !important;
+}
+
 
 .neon-notification-error {
     background-color: var(--color-dark-surface);

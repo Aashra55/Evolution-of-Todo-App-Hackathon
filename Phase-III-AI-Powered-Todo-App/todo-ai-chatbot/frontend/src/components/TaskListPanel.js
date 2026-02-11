@@ -6,14 +6,14 @@ function TaskListPanel({ tasks }) {
   const completedTasks = tasks.filter(task => task.completed);
 
   return (
-    <div className="p-4 dark-surface rounded-lg neon-glow-secondary neon-border-secondary">
+    <div className="p-4 task-panel-wrapper rounded-lg neon-glow-secondary">
       <h2 className="text-xl font-semibold mb-4 neon-text-glow-primary">Your Tasks</h2>
       
       <h3 className="text-lg font-medium mb-2 light-text">Pending ({pendingTasks.length})</h3>
       {pendingTasks.length > 0 ? (
         <ul className="space-y-2 mb-4">
           {pendingTasks.map(task => (
-            <li key={task.id} className="p-3 dark-surface rounded-md neon-glow-primary neon-border-primary light-text">
+            <li key={task.id} className="p-3 dark-surface rounded-md neon-glow-primary light-text">
               <strong className="neon-text-glow-primary">{task.title}</strong>
               {task.description && <p className="gray-text text-sm mt-1">{task.description}</p>}
             </li>
@@ -27,7 +27,7 @@ function TaskListPanel({ tasks }) {
       {completedTasks.length > 0 ? (
         <ul className="space-y-2">
           {completedTasks.map(task => (
-            <li key={task.id} className="p-3 dark-surface rounded-md neon-glow-secondary neon-border-secondary line-through gray-text">
+            <li key={task.id} className="p-3 dark-surface rounded-md neon-glow-secondary line-through gray-text">
               <strong className="neon-text-glow-secondary">{task.title}</strong>
               {task.description && <p className="gray-text text-sm mt-1">{task.description}</p>}
             </li>
