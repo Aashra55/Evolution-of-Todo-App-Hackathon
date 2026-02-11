@@ -6,10 +6,9 @@ import TaskListPanel from './TaskListPanel';
 import Notifications from './Notifications'; // Import Notifications component
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import '../styles/responsive.css'; // Import responsive styles
 
-const USER_ID = uuid4(); // Generate a unique user ID for this session
-const CONVERSATION_ID = uuid4(); // Generate a unique conversation ID for this session
+const USER_ID = uuidv4(); // Generate a unique user ID for this session
+const CONVERSATION_ID = uuidv4(); // Generate a unique conversation ID for this session
 
 function App() {
   const [messages, setMessages] = useState([]);

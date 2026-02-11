@@ -2,11 +2,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from backend.src.config.database import create_db_and_tables
-from backend.src.config.logging import configure_logging
-from backend.src.middleware.error_handler import ErrorHandlingMiddleware
-from backend.src.api import chat
-from backend.src.agent.init import openai_agent_manager
+from src.config.database import create_db_and_tables
+from src.config.logging import configure_logging
+from src.middleware.error_handler import ErrorHandlingMiddleware
+from src.api import chat
+from src.agent.init import openai_agent_manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

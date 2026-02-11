@@ -8,7 +8,12 @@ from typing import List, Dict, Any, Optional
 
 class OpenAIAgentManager:
     def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        # Configure OpenAI client to use Gemini API base URL
+        # The OPENAI_API_KEY environment variable will actually hold the GEMINI_API_KEY
+        self.client = OpenAI(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            base_url=os.getenv("OPENAI_API_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+        )
         self.assistant_id: Optional[str] = None
         # The tools will be managed by the TodoAgent and passed during run creation
         # self.tools: List[Dict[str, Any]] = []

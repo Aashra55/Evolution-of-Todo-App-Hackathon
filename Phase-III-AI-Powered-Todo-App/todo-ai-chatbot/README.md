@@ -92,7 +92,7 @@ Follow these instructions to set up and run the AI-Powered Todo Chatbot locally.
 *   **Poetry**: Python dependency management tool (`pip install poetry`).
 *   **Node.js & npm (or Yarn)**: For the frontend.
 *   **Neon Serverless PostgreSQL**: A database instance.
-*   **OpenAI API Key**: Required for the AI Agent.
+*   **Gemini API Key**: Required for the AI Agent.
 
 ### Cloning the Repository
 
@@ -126,11 +126,11 @@ cd Evolution-of-Todo-App-Hackathon/Phase-III-AI-Powered-Todo-App/todo-ai-chatbot
     Create a `.env` file in the `backend/` directory with the following variables:
     ```
     DATABASE_URL="postgresql+psycopg://user:password@host:port/database_name"
-    OPENAI_API_KEY="your_openai_api_key"
-    # Placeholder for Better Auth secret (e.g., used for JWT signing)
+    OPENAI_API_KEY="your_gemini_api_key" # Use your Gemini API key here
+    OPENAI_API_BASE_URL="https://generativelanguage.googleapis.com/v1beta/openai/" # Gemini API endpoint
     SECRET_KEY="your_super_secret_key_for_jwt" 
     ```
-    *Replace placeholders with your actual database connection string, OpenAI API key, and a strong secret key.*
+    *Replace placeholders with your actual database connection string, Gemini API key, and a strong secret key.*
 5.  **Run Database Initialization**:
     This project uses SQLModel. Ensure your `DATABASE_URL` is correctly configured in `backend/.env`.
     ```bash
