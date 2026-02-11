@@ -14,7 +14,7 @@ function ChatInput({ onSendMessage }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center p-4 dark-surface">
+    <form onSubmit={handleSubmit} className="flex items-center p-4 dark-surface ml-6">
       <input
         type="text"
         value={message}
@@ -22,10 +22,7 @@ function ChatInput({ onSendMessage }) {
         placeholder="Type your message..."
         className="flex-grow p-4 neon-input mr-2"
       />
-      <button
-        type="submit"
-        className="px-6 py-2 neon-button transition duration-300 ease-in-out ml-6"
-      >
+      <button type="submit" className="px-8 py-4 neon-button transition duration-300 ease-in-out ml-4">
         <FaPaperPlane size={24} />
       </button>
     </form>
