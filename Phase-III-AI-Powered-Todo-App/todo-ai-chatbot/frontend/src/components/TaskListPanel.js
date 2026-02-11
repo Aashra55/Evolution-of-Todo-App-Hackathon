@@ -6,7 +6,7 @@ function TaskListPanel({ tasks }) {
   const completedTasks = tasks.filter(task => task.completed);
 
   return (
-    <div className="p-4 task-panel-wrapper rounded-lg neon-glow-secondary">
+    <div className="p-4 task-panel-wrapper rounded-lg">
       <h2 className="text-xl font-semibold mb-4 neon-text-glow-primary">Your Tasks</h2>
       
       <h3 className="text-lg font-medium mb-2 light-text">Pending ({pendingTasks.length})</h3>

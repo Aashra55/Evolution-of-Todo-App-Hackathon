@@ -13,18 +13,15 @@ function ChatInput({ onSendMessage }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center p-4 dark-surface">
+    <form onSubmit={handleSubmit} className="flex items-center p-4 dark-surface ml-4">
       <input
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type your message..."
-        className="flex-grow p-2 neon-input mr-2"
+        className="flex-grow p-3 neon-input mr-6"
       />
-      <button
-        type="submit"
-        className="px-4 py-2 neon-button transition duration-300 ease-in-out"
-      >
+      <button type="submit" className="px-8 py-3 neon-button transition duration-300 ease-in-out ml-4">
         Send
       </button>
     </form>

@@ -139,9 +139,11 @@ body {
     border-radius: 0.5rem; /* Equivalent to Tailwind rounded-lg */
     outline: none;
     box-shadow: var(--neon-primary-glow);
+    font-family: 'Space Mono', monospace; /* Explicitly set font */
 }
 .neon-button:hover {
-    background-color: var(--color-neon-secondary-light); /* Lighter purplish background on hover to match glow better */
+    background-color: var(--color-neon-secondary-dark); /* AI bot message background on hover */
+    color: var(--color-white-text); /* White text color on hover */
     box-shadow: var(--neon-secondary-glow);
 }
 .neon-button:focus {
@@ -149,7 +151,7 @@ body {
 }
 
 .task-panel-wrapper {
-  background-color: rgba(60, 0, 60, 0.5); /* Light purplish background for task panel */
+  background-color: var(--color-dark-surface); /* Opaque dark surface background for task panel */
   border: none; /* Remove border from task panel */
 }
 
