@@ -6,6 +6,7 @@ import TaskListPanel from './TaskListPanel';
 import Notifications from './Notifications'; // Import Notifications component
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { MdChatBubbleOutline } from 'react-icons/md'; // Import chat bubble icon
 
 const USER_ID = uuidv4(); // Generate a unique user ID for this session
 const CONVERSATION_ID = uuidv4(); // Generate a unique conversation ID for this session
@@ -14,6 +15,12 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [tasks, setTasks] = useState([]); // State to hold tasks
   const [notifications, setNotifications] = useState([]); // State to hold notifications
+  const [showChatModal, setShowChatModal] = useState(false); // State to control chat modal visibility
+  // showTaskPanel state and toggleTaskPanel function removed as task panel is always visible on mobile
+
+  const toggleChatModal = () => {
+    setShowChatModal(!showChatModal);
+  };
 
   // Helper function to add a notification
   const addNotification = (message, type = 'info') => {
@@ -44,7 +51,7 @@ function App() {
               addNotification(agentResponse.message, 'success');
             }
           } else if (agentResponse.message) {
-             addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
+            addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
           }
         } catch (e) {
           console.error("Could not parse agent's task response:", e);
@@ -73,7 +80,7 @@ function App() {
       });
       const agentResponseRaw = response.data.response;
       setMessages((prevMessages) => [...prevMessages, { sender: 'ai', text: agentResponseRaw }]);
-      
+
       // Attempt to parse agent's raw response to check for status/message for notification
       try {
         const agentResponseParsed = JSON.parse(agentResponseRaw);
@@ -100,19 +107,45 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col dark-background light-text">
-      <header className="py-4 px-6 shadow-lg">
-        <h1 className="text-3xl font-extrabold text-center tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
+      <header className="flex items-center justify-between py-4 px-6 shadow-lg">
+        <h1 className="text-3xl font-extrabold tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
+        {/* Mobile Menu Button for Task Panel removed as task panel is always visible */}
       </header>
       <div className="flex flex-1 flex-col md:flex-row main-content">
-        <div className="flex flex-col flex-grow md:flex-grow-0 md:w-2/3 chat-section">
+        {/* Chat Section - Hidden on mobile main layout, appears as modal. Takes 2/3 width on desktop (left side) */}
+        <div className="flex flex-col flex-grow hidden md:flex md:w-2/3 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
+
+        {/* Task Panel - Always visible below header on mobile, takes 1/3 width on desktop (right side) */}
         <aside className="w-full md:w-1/3 p-4 dark-surface task-panel-section">
           <TaskListPanel tasks={tasks} />
         </aside>
       </div>
       <Notifications notifications={notifications} removeNotification={removeNotification} />
+
+      {/* Floating Chat Button for Mobile - always visible */}
+      <button
+        onClick={toggleChatModal}
+        className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-neon-secondary shadow-lg hover:bg-neon-secondary-light transition-colors duration-300 md:hidden" // Visible on mobile, hidden on desktop
+        aria-label="Open Chat"
+      >
+        <MdChatBubbleOutline size={28} className="text-white" />
+      </button>
+
+      {/* Chat Modal for Mobile */}
+      {showChatModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 md:hidden"> {/* Only on mobile */}
+          <div className="bg-dark-background w-full h-full flex flex-col p-4 rounded-lg shadow-lg relative">
+            <button onClick={toggleChatModal} className="absolute top-4 right-4 text-white focus:outline-none">
+              &times;
+            </button>
+            <ChatDisplay messages={messages} />
+            <ChatInput onSendMessage={handleSendMessage} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
