@@ -107,7 +107,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col dark-background light-text">
-      <header className="flex items-center justify-between py-4 px-6 shadow-lg">
+      <header className="flex items-center justify-center py-4 px-6 shadow-lg">
         <h1 className="text-3xl font-extrabold tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
         {/* Mobile Menu Button for Task Panel removed as task panel is always visible */}
       </header>
