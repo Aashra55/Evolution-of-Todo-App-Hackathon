@@ -208,8 +208,3 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
-
-# UI Issue
-
-mobile screen me main chatbox hide nahi hai
-![SS](image-1.png)
