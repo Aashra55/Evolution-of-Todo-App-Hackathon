@@ -22,8 +22,11 @@ function ChatInput({ onSendMessage }) {
         placeholder="Type your message..."
         className="flex-grow p-4 neon-input mr-2"
       />
-      <button type="submit" className="px-8 py-4 neon-button transition duration-300 ease-in-out ml-4">
-        <FaPaperPlane size={24} />
+      <button
+        type="submit"
+        className="px-8 py-4 neon-button transition duration-300 ease-in-out ml-4"
+      >
+        <FaPaperPlane className="text-lg md:text-xl" />
       </button>
     </form>
   );
