@@ -113,7 +113,7 @@ function App() {
       </header>
       <div className="flex flex-1 flex-col md:flex-row main-content">
         {/* Chat Section - Takes 2/3 width on desktop (left side), hidden on mobile main layout */}
-        <div className="flex flex-col flex-grow hidden md:flex md:w-2/3 chat-section">
+        <div className="flex-col flex-grow hidden md:flex md:w-2/3 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
@@ -128,10 +128,10 @@ function App() {
       {/* Floating Chat Button for Mobile - always visible */}
       <button
         onClick={toggleChatModal}
-        className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-neon-secondary shadow-lg hover:bg-neon-secondary-light transition-colors duration-300 md:hidden" // Visible on mobile, hidden on desktop
+        className="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-colors duration-300 md:hidden chat-bubble" // Visible on mobile, hidden on desktop
         aria-label="Open Chat"
       >
-        <MdChatBubbleOutline size={28} className="text-white" />
+        <MdChatBubbleOutline size={28} className="chat-bubble-text" />
       </button>
 
       {/* Chat Modal for Mobile */}

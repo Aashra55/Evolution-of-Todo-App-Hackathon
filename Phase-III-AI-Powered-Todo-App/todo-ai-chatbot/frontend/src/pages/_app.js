@@ -7,10 +7,7 @@ import '../styles/custom-neon.css'; // Custom neon styles
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <Head>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-      </Head>
+      {/* Removed <Head> component with link tags as they are moved to _document.js */}
       <Component {...pageProps} />
     </>
   );
