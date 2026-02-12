@@ -51,7 +51,7 @@ function App() {
               addNotification(agentResponse.message, 'success');
             }
           } else if (agentResponse.message) {
-            addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
+             addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
           }
         } catch (e) {
           console.error("Could not parse agent's task response:", e);
@@ -80,7 +80,7 @@ function App() {
       });
       const agentResponseRaw = response.data.response;
       setMessages((prevMessages) => [...prevMessages, { sender: 'ai', text: agentResponseRaw }]);
-
+      
       // Attempt to parse agent's raw response to check for status/message for notification
       try {
         const agentResponseParsed = JSON.parse(agentResponseRaw);
@@ -112,12 +112,12 @@ function App() {
         {/* Mobile Menu Button for Task Panel removed as task panel is always visible */}
       </header>
       <div className="flex flex-1 flex-col md:flex-row main-content">
-        {/* Chat Section - Hidden on mobile main layout, appears as modal. Takes 2/3 width on desktop (left side) */}
+        {/* Chat Section - Takes 2/3 width on desktop (left side), hidden on mobile main layout */}
         <div className="flex flex-col flex-grow hidden md:flex md:w-2/3 chat-section">
           <ChatDisplay messages={messages} />
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
-
+        
         {/* Task Panel - Always visible below header on mobile, takes 1/3 width on desktop (right side) */}
         <aside className="w-full md:w-1/3 p-4 dark-surface task-panel-section">
           <TaskListPanel tasks={tasks} />
@@ -139,7 +139,7 @@ function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 md:hidden"> {/* Only on mobile */}
           <div className="bg-dark-background w-full h-full flex flex-col p-4 rounded-lg shadow-lg relative">
             <button onClick={toggleChatModal} className="absolute top-4 right-4 text-white focus:outline-none">
-              &times;
+              &times; 
             </button>
             <ChatDisplay messages={messages} />
             <ChatInput onSendMessage={handleSendMessage} />
