@@ -6,7 +6,7 @@ import TaskListPanel from './TaskListPanel';
 import Notifications from './Notifications'; // Import Notifications component
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { MdChatBubbleOutline } from 'react-icons/md'; // Import chat bubble icon
+import { FaRobot } from 'react-icons/fa'; // Import robot icon
 
 const USER_ID = uuidv4(); // Generate a unique user ID for this session
 const CONVERSATION_ID = uuidv4(); // Generate a unique conversation ID for this session
@@ -131,7 +131,7 @@ function App() {
         className="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-colors duration-300 md:hidden chat-bubble" // Visible on mobile, hidden on desktop
         aria-label="Open Chat"
       >
-        <MdChatBubbleOutline size={28} className="chat-bubble-text" />
+        <FaRobot size={28} className="chat-bubble-text" />
       </button>
 
       {/* Chat Modal for Mobile */}

@@ -48,8 +48,8 @@
 body {
     background-color: var(--color-dark-background);
     color: var(--color-light-text);
-    font-family: 'Space Mono', monospace;
-    /* Suitable for neon aesthetic */
+    font-family: 'Inter', sans-serif;
+    /* Suitable for a professional aesthetic */
 }
 
 /* Custom glow effects for elements */
@@ -237,5 +237,5 @@ body {
 }
 
 .chat-bubble-text {
-    color: var(--color-dark-gray-text);
+    color: #f80df8;
 }
