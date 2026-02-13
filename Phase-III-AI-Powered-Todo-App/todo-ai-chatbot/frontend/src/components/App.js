@@ -131,7 +131,7 @@ function App() {
         className="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-colors duration-300 md:hidden chat-bubble" // Visible on mobile, hidden on desktop
         aria-label="Open Chat"
       >
-        <FaRobot size={28} className="chat-bubble-text" />
+        <FaRobot size={28} className="text-black" />
       </button>
 
       {/* Chat Modal for Mobile */}

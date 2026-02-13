@@ -48,8 +48,7 @@
 body {
     background-color: var(--color-dark-background);
     color: var(--color-light-text);
-    font-family: 'Inter', sans-serif;
-    /* Suitable for a professional aesthetic */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Custom glow effects for elements */
@@ -236,6 +235,3 @@ body {
     box-shadow: var(--neon-primary-glow);
 }
 
-.chat-bubble-text {
-    color: #f80df8;
-}
