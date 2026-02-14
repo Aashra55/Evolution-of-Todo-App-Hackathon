@@ -29,10 +29,10 @@ function ChatDisplay({ messages }) {
   return (
     <div className="flex-1 p-4 overflow-y-auto chat-display-wrapper min-h-[75vh] rounded-lg mb-4 md:ml-4">
       {messages.map((msg, index) => (
-        <div key={index} className={`mb-3 p-3 rounded-lg max-w-sm ${msg.sender === 'user' ? 'ml-auto neon-user-message' : 'mr-auto neon-ai-message'}`}>
-          <div className="flex items-center mb-1 font-bold">
-            {msg.sender === 'user' ? <FaUser className="mr-2 neon-dark-text" /> : <FaRobot className="mr-2 neon-light-text" />}
-            <span className={msg.sender === 'user' ? 'neon-dark-text' : 'neon-light-text'}>{msg.sender === 'user' ? 'You' : 'AI'}:</span>
+        <div key={index} className={`mb-4 p-4 max-w-sm ${msg.sender === 'user' ? 'ml-auto user-message' : 'mr-auto ai-message'}`}>
+          <div className="flex items-center mb-2 font-semibold">
+            {msg.sender === 'user' ? <FaUser className="mr-2 user-icon" /> : <FaRobot className="mr-2 ai-icon" />}
+            <span className={msg.sender === 'user' ? 'text-white' : 'text-gray-700'}>{msg.sender === 'user' ? 'You' : 'AI'}:</span>
           </div>
           <div className="text-sm">
             {renderMessageContent(msg)}

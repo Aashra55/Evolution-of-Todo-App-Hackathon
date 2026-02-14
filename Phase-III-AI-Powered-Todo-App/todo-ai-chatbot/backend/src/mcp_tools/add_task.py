@@ -9,7 +9,9 @@ def add_task(session: Session, user_id: UUID, title: str, description: str = Non
     Adds a new todo task for a user.
     """
     try:
-        new_task = Task(user_id=user_id, title=title, description=description)
+        # Convert UUID to string for user_id
+        user_id_str = str(user_id)
+        new_task = Task(user_id=user_id_str, title=title, description=description)
         session.add(new_task)
         session.commit()
         session.refresh(new_task)

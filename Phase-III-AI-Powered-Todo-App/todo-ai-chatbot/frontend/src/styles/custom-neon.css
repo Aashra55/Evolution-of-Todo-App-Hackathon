@@ -1,125 +1,241 @@
-/* frontend/src/styles/custom-neon.css */
+/* frontend/src/styles/custom-neon.css - Clean Modern Light Theme */
 
 :root {
-    /* Colors */
-    --color-dark-background: #0A0A0A;
-    /* Even darker than 0F0F0F */
-    --color-dark-surface: #1A1A1A;
-    /* Slightly lighter for elements */
-    --color-dark-border: #333333;
-    /* For subtle borders */
+    /* Soft Light Theme Colors */
+    --color-background: #F8F9FA;
+    --color-surface: #FFFFFF;
+    --color-surface-secondary: #F1F3F5;
+    --color-border: #E1E4E8;
+    --color-border-light: #F0F0F0;
 
-    --color-neon-primary: #00FFFF;
-    /* Cyan */
-    --color-neon-primary-light: #66FFFF;
-    --color-neon-primary-dark: #00BFFF;
-    /* Explicit hex: #00BFFF */
+    /* Primary Colors - Soft Blue */
+    --color-primary: #4A90E2;
+    --color-primary-light: #6BA3E8;
+    --color-primary-dark: #357ABD;
+    --color-primary-bg: #E8F2FC;
 
-    --color-neon-secondary: #FF00FF;
-    /* Fuchsia */
-    --color-neon-secondary-light: #FF66FF;
-    --color-neon-secondary-dark: #BF00BF;
-    /* Darker fuchsia for bot message bg */
+    /* Secondary Colors - Soft Purple */
+    --color-secondary: #7B68EE;
+    --color-secondary-light: #9B8AF0;
+    --color-secondary-dark: #5D4CDB;
+    --color-secondary-bg: #F0EDFF;
 
-    --color-light-text: #E0E0E0;
-    --color-gray-text: #A0A0A0;
-    --color-danger: #FF6347;
-    /* Tomato */
-    --color-success: #32CD32;
-    /* LimeGreen */
+    /* Text Colors */
+    --color-text-primary: #2C3E50;
+    --color-text-secondary: #5A6C7D;
+    --color-text-light: #8B9AAB;
+    --color-text-white: #FFFFFF;
 
-    --color-black-text: #000000;
-    /* For user messages text/icon (original intent) */
-    --color-dark-gray-text: #808080;
-    /* Darker grayish for user message text/icon */
-    --color-white-text: #FFFFFF;
-    /* For bot messages text/icon */
+    /* Status Colors */
+    --color-success: #28A745;
+    --color-success-bg: #D4EDDA;
+    --color-error: #DC3545;
+    --color-error-bg: #F8D7DA;
+    --color-info: #17A2B8;
+    --color-info-bg: #D1ECF1;
+    --color-warning: #FFC107;
+    --color-warning-bg: #FFF3CD;
 
-    /* Glows */
-    --neon-primary-glow: 0 0 5px var(--color-neon-primary-light), 0 0 10px var(--color-neon-primary), 0 0 15px var(--color-neon-primary-dark);
-    --neon-secondary-glow: 0 0 5px var(--color-neon-secondary-light), 0 0 10px var(--color-neon-secondary), 0 0 15px var(--color-neon-secondary-dark);
-    --neon-text-glow: 0 0 2px var(--color-neon-primary), 0 0 5px var(--color-neon-primary);
-    --neon-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --neon-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --neon-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    /* Shadows - Soft and Subtle */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Base styles for a dark theme */
+/* Base styles for light theme */
 body {
-    background-color: var(--color-dark-background);
-    color: var(--color-light-text);
-    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
 }
 
-/* Custom glow effects for elements */
-.neon-glow-primary {
-    box-shadow: var(--neon-primary-glow);
-    border-color: var(--color-neon-primary);
+/* Utility Classes */
+.light-text {
+    color: var(--color-text-primary);
 }
 
-.neon-glow-secondary {
-    box-shadow: var(--neon-secondary-glow);
+.gray-text {
+    color: var(--color-text-secondary);
 }
 
-.neon-glow-secondary-no-border {
-    box-shadow: var(--neon-secondary-glow);
+.dark-background {
+    background-color: var(--color-background);
 }
 
-.neon-text-glow-primary {
-    text-shadow: var(--neon-text-glow);
-    color: var(--color-neon-primary);
+.dark-surface {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
 }
 
-.neon-text-glow-secondary {
-    text-shadow: 0 0 2px var(--color-neon-secondary), 0 0 5px var(--color-neon-secondary);
-    color: var(--color-neon-secondary);
+/* Header Styles */
+.header-title {
+    color: var(--color-primary);
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
-.neon-dark-text {
-    color: var(--color-dark-gray-text);
-    /* Updated for grayish user text/icon */
+/* Task Panel Styles */
+.task-panel-wrapper {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
-.neon-light-text {
-    color: var(--color-white-text);
-    /* Updated to use pure white for bot text/icon */
+.task-item {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
-.neon-border-primary {
-    border-color: var(--color-neon-primary);
+.task-item:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
-.neon-border-secondary {
-    border-color: var(--color-neon-secondary);
+.task-item-pending {
+    background-color: var(--color-primary-bg);
+    border-left: 3px solid var(--color-primary);
 }
 
-/* Adjustments for default Tailwind classes if still used */
-.shadow-md {
-    box-shadow: var(--neon-shadow-md);
+.task-item-completed {
+    background-color: var(--color-surface-secondary);
+    border-left: 3px solid var(--color-text-light);
+    opacity: 0.7;
 }
 
-.shadow-lg {
-    box-shadow: var(--neon-shadow-lg);
+.task-title {
+    color: var(--color-text-primary);
+    font-weight: 600;
 }
 
-/* Basic Layout classes (if not handled by Tailwind utilities directly) */
-.min-h-screen {
-    min-height: 100vh;
+.task-title-completed {
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
 }
 
-.flex {
-    display: flex;
+/* Chat Display Styles */
+.chat-display-wrapper {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
-.flex-col {
-    flex-direction: column;
+.user-message {
+    background-color: var(--color-primary);
+    color: var(--color-text-white);
+    border-radius: 12px 12px 4px 12px;
+    box-shadow: var(--shadow-md);
 }
 
-.flex-1 {
-    flex: 1;
+.ai-message {
+    background-color: var(--color-surface-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px 12px 12px 4px;
+    box-shadow: var(--shadow-sm);
 }
 
-/* Responsive utilities - might need to be explicitly written if not relying on Tailwind build */
+.user-icon {
+    color: var(--color-text-white);
+}
+
+.ai-icon {
+    color: var(--color-secondary);
+}
+
+/* Input Styles */
+.modern-input {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.modern-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-bg), var(--shadow-md);
+}
+
+.modern-input::placeholder {
+    color: var(--color-text-light);
+}
+
+/* Button Styles */
+.modern-button {
+    background-color: var(--color-primary);
+    color: var(--color-text-white);
+    font-weight: 600;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.modern-button:hover {
+    background-color: var(--color-primary-dark);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+}
+
+.modern-button:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Notification Styles */
+.notification-success {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+.notification-error {
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+.notification-info {
+    background-color: var(--color-info-bg);
+    border: 1px solid var(--color-info);
+    color: var(--color-info);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+/* Chat Bubble Button */
+.chat-bubble {
+    background-color: var(--color-primary);
+    color: var(--color-text-white);
+    font-weight: 600;
+    outline: none;
+    border: none;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.2s ease;
+}
+
+.chat-bubble:hover {
+    background-color: var(--color-primary-dark);
+    box-shadow: var(--shadow-xl);
+    transform: scale(1.05);
+}
+
+/* Responsive utilities */
 @media (min-width: 768px) {
     .md\:flex-row {
         flex-direction: row;
@@ -132,106 +248,9 @@ body {
     .md\:border-l {
         border-left-width: 1px;
     }
-
-    /* Add other responsive classes as needed */
 }
 
-/* ChatInput specific styles */
-.neon-input {
-    background-color: var(--color-dark-background);
-    border: 1px solid var(--color-neon-primary);
-    color: var(--color-light-text);
-    border-radius: 0.5rem;
-    /* Equivalent to Tailwind rounded-lg */
-    outline: none;
-    box-shadow: var(--neon-primary-glow);
+/* Smooth transitions */
+* {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
-
-.neon-input:focus {
-    border-color: var(--color-neon-secondary);
-    box-shadow: var(--neon-secondary-glow);
-}
-
-.neon-button {
-    background-color: var(--color-neon-primary);
-    color: var(--color-dark-background);
-    font-weight: bold;
-    border-radius: 0.5rem;
-    /* Equivalent to Tailwind rounded-lg */
-    outline: none;
-    box-shadow: var(--neon-primary-glow);
-    /* Base shadow restored */
-}
-
-.neon-button:hover {
-    background-color: var(--color-neon-secondary-dark);
-    /* AI bot message background on hover */
-    color: var(--color-white-text);
-    /* White text color on hover */
-    box-shadow: var(--neon-secondary-glow);
-    /* Hover shadow */
-}
-
-.task-panel-wrapper {
-    background-color: #262626;
-    /* Opaque dark grey background for task panel */
-    border: none;
-    /* Remove border from task panel */
-}
-
-/* ChatDisplay specific styles */
-.neon-user-message {
-    background-color: #00BFFF;
-    /* Darker cyan for user - explicit hex */
-    color: var(--color-dark-gray-text);
-    /* Set user message text to gray */
-    box-shadow: var(--neon-primary-glow);
-    border: 1px solid var(--color-neon-primary);
-}
-
-.chat-display-wrapper {
-    background-color: #262626;
-    /* Opaque dark background for chat div */
-    border: none;
-    /* Remove border from chat div */
-}
-
-.neon-ai-message {
-    background-color: #BF00BF;
-    /* Darker fuchsia for AI - explicit hex */
-    color: var(--color-light-text);
-    /* Will be overridden by neon-light-text */
-    box-shadow: var(--neon-secondary-glow);
-    border: 1px solid var(--color-neon-secondary);
-}
-
-/* Notifications specific styles */
-.neon-notification-success {
-    background-color: var(--color-dark-surface);
-    border: 1px solid var(--color-success);
-    color: var(--color-success);
-    box-shadow: 0 0 5px var(--color-success);
-}
-
-.neon-notification-error {
-    background-color: var(--color-dark-surface);
-    border: 1px solid var(--color-danger);
-    color: var(--color-danger);
-    box-shadow: 0 0 5px var(--color-danger);
-}
-
-.neon-notification-info {
-    background-color: var(--color-dark-surface);
-    border: 1px solid var(--color-gray-text);
-    color: var(--color-gray-text);
-    box-shadow: 0 0 5px var(--color-gray-text);
-}
-
-.chat-bubble {
-    background-color: var(--color-neon-primary-dark);
-    color: var(--color-dark-background);
-    font-weight: bold;
-    outline: none;
-    box-shadow: var(--neon-primary-glow);
-}
-

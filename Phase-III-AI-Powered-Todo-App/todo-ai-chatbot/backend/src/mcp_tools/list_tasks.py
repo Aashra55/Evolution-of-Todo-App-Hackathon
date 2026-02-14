@@ -9,7 +9,9 @@ def list_tasks(session: Session, user_id: UUID, completed: Optional[bool] = None
     Lists todo tasks for a user, optionally filtering by completion status.
     """
     try:
-        query = select(Task).where(Task.user_id == user_id)
+        # Convert UUID to string for user_id
+        user_id_str = str(user_id)
+        query = select(Task).where(Task.user_id == user_id_str)
         if completed is not None:
             query = query.where(Task.completed == completed)
         

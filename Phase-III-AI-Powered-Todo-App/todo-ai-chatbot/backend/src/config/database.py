@@ -9,12 +9,16 @@ from src.models.task import Task
 from src.models.conversation import Conversation
 from src.models.message import Message
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@host:port/dbname")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///todo_app.db")
 
 engine = create_engine(DATABASE_URL, echo=True)
 
 def create_db_and_tables():
     """Create database tables based on SQLModel metadata."""
+    # Drop all tables first to ensure clean schema (for development)
+    # In production, you'd want to use proper migrations instead
+    SQLModel.metadata.drop_all(engine)
+    # Create all tables with the current schema
     SQLModel.metadata.create_all(engine)
 
 def get_session() -> Generator[Session, None, None]:

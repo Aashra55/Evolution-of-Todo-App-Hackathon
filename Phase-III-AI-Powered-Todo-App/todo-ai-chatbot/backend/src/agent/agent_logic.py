@@ -1,7 +1,7 @@
 # backend/src/agent/agent_logic.py
 import json
 import re # Added for re.search
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from uuid import UUID
 
 from sqlmodel import Session
@@ -89,8 +89,8 @@ class TodoAgent:
             except Exception as e:
                 return json.dumps({"status": "error", "message": f"Error processing add task command: {e}"})
         
-        # Heuristic for list_tasks
-        if "list tasks" in message_lower or "show tasks" in message_lower or "what do i need to do" in message_lower:
+        # Heuristic for list_tasks - match "list" and "tasks" separately to catch variations like "list all my tasks"
+        if ("list" in message_lower and "task" in message_lower) or "show tasks" in message_lower or "what do i need to do" in message_lower or "show my tasks" in message_lower:
             completed_filter: Optional[bool] = None
             if "pending" in message_lower or "uncompleted" in message_lower:
                 completed_filter = False
@@ -187,7 +187,15 @@ class TodoAgent:
                 return json.dumps({"status": "error", "message": f"Error processing update task command: {e}"})
 
         # Fallback to general AI response if no tool is matched
-        return await self.agent_manager.process_message(str(user_id), str(conversation_id), message_content)
+        print(f"No tool matched for message: {message_content}. Falling back to AI response.")
+        try:
+            ai_response = await self.agent_manager.process_message(str(user_id), str(conversation_id), message_content)
+            print(f"AI response received: {ai_response[:200] if ai_response else 'None'}...")
+            return ai_response if ai_response else "I received your message but couldn't generate a response. Please try again."
+        except Exception as e:
+            error_msg = f"Error getting AI response: {str(e)}"
+            print(f"Error in AI response: {error_msg}")
+            return error_msg
 
 async def get_todo_agent(
     agent_manager: OpenAIAgentManager = Depends(get_openai_agent_manager),

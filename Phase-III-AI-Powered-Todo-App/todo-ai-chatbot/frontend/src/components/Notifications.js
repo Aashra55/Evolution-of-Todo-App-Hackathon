@@ -10,7 +10,7 @@ const Notification = ({ message, type, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className={`p-3 rounded-lg flex justify-between items-center transition-opacity duration-300 ${type === 'success' ? 'neon-notification-success' : type === 'error' ? 'neon-notification-error' : 'neon-notification-info'}`}>
+    <div className={`p-4 rounded-lg flex justify-between items-center transition-opacity duration-300 ${type === 'success' ? 'notification-success' : type === 'error' ? 'notification-error' : 'notification-info'}`}>
       <span className="text-sm font-medium">{message}</span>
       <button onClick={onClose} className="ml-4 text-lg font-bold text-gray-400 hover:text-gray-200 focus:outline-none">&times;</button>
     </div>

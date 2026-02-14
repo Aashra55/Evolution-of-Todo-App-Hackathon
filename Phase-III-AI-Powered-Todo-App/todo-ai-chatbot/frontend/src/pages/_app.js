@@ -2,7 +2,7 @@
 import Head from 'next/head'; // Import Head component
 import '../components/Notifications.css'; // Global Notifications styles
 import '../styles/responsive.css'; // Global responsive styles
-import '../styles/custom-neon.css'; // Custom neon styles
+import '../styles/custom-neon.css'; // Custom modern light theme styles
 
 function MyApp({ Component, pageProps }) {
   return (

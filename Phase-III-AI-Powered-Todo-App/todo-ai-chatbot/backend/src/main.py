@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.database import create_db_and_tables
 from src.config.logging import configure_logging
@@ -21,8 +21,17 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Add middleware
-app.add_middleware(BaseHTTPMiddleware, dispatch=ErrorHandlingMiddleware)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Frontend URLs
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
+
+# Add error handling middleware
+app.add_middleware(ErrorHandlingMiddleware)
 
 # Include routers
 app.include_router(chat.router, prefix="/api")

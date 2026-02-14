@@ -54,13 +54,22 @@ function App() {
              addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
           }
         } catch (e) {
-          console.error("Could not parse agent's task response:", e);
-          addNotification("Error parsing agent's task response.", 'error');
+          // Response is not JSON (could be plain text error message or AI response)
+          // Silently handle this - don't show error notification for non-JSON responses
+          console.log("Agent response is not JSON (likely plain text):", data.response);
+          // Don't show error notification for plain text responses
         }
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      addNotification('Error fetching tasks from backend.', 'error');
+      // Only show error if it's a real network error, not just a missing backend
+      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+        // Backend might not be running yet, silently fail on initial load
+        console.log('Backend not available yet, will retry on user interaction');
+      } else {
+        const errorMessage = error.response?.data?.detail || error.message || 'Error fetching tasks from backend.';
+        addNotification(`Error: ${errorMessage}`, 'error');
+      }
     }
   };
 
@@ -88,8 +97,13 @@ function App() {
           addNotification(agentResponseParsed.message, agentResponseParsed.status || 'info');
         }
       } catch (e) {
-        // Not a JSON response, or parsing failed, just add a generic info notification
-        addNotification("Agent responded.", 'info');
+        // Not a JSON response (could be plain text AI response or error message)
+        // Only show notification if it's an error message
+        if (agentResponseRaw.toLowerCase().includes('error') || agentResponseRaw.toLowerCase().includes('trouble')) {
+          // It's likely an error message, don't show generic "Agent responded" notification
+        } else {
+          // It's a regular AI text response, no need for notification
+        }
       }
 
       // After sending a message, re-fetch tasks to update the panel
@@ -97,18 +111,19 @@ function App() {
 
     } catch (error) {
       console.error('Error sending message:', error);
-      addNotification('Error: Could not connect to the chatbot.', 'error');
+      const errorMessage = error.response?.data?.detail || error.message || 'Could not connect to the chatbot.';
+      addNotification(`Error: ${errorMessage}`, 'error');
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: 'ai', text: 'Error: Could not connect to the chatbot.' },
+        { sender: 'ai', text: `Error: ${errorMessage}` },
       ]);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col dark-background light-text">
-      <header className="flex items-center justify-center py-4 px-6 shadow-lg">
-        <h1 className="text-3xl font-extrabold tracking-wide neon-text-glow-primary">AI-powered Todo Chatbot</h1>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <header className="flex items-center justify-center py-6 px-6 shadow-sm bg-white border-b border-gray-200">
+        <h1 className="text-3xl font-bold tracking-tight header-title">AI-Powered Todo Chatbot</h1>
         {/* Mobile Menu Button for Task Panel removed as task panel is always visible */}
       </header>
       <div className="flex flex-1 flex-col md:flex-row main-content">
@@ -119,7 +134,7 @@ function App() {
         </div>
         
         {/* Task Panel - Always visible below header on mobile, takes 1/3 width on desktop (right side) */}
-        <aside className="w-full md:w-1/3 p-4 dark-surface task-panel-section">
+        <aside className="w-full md:w-1/3 p-4 bg-white task-panel-section">
           <TaskListPanel tasks={tasks} />
         </aside>
       </div>
@@ -131,14 +146,14 @@ function App() {
         className="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-colors duration-300 md:hidden chat-bubble" // Visible on mobile, hidden on desktop
         aria-label="Open Chat"
       >
-        <FaRobot size={28} className="text-black" />
+        <FaRobot size={28} className="text-white" />
       </button>
 
       {/* Chat Modal for Mobile */}
       {showChatModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 md:hidden"> {/* Only on mobile */}
-          <div className="bg-dark-background w-full h-full flex flex-col p-4 rounded-lg shadow-lg relative">
-            <button onClick={toggleChatModal} className="absolute top-4 right-4 text-white focus:outline-none">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 md:hidden"> {/* Only on mobile */}
+          <div className="bg-white w-full h-full flex flex-col p-4 rounded-lg shadow-xl relative">
+            <button onClick={toggleChatModal} className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 focus:outline-none text-2xl font-bold">
               &times; 
             </button>
             <ChatDisplay messages={messages} />
