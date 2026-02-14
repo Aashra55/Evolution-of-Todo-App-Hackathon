@@ -27,7 +27,7 @@ function ChatDisplay({ messages }) {
   };
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto chat-display-wrapper min-h-[75vh] rounded-lg mb-4 md:ml-4">
+    <div className="flex-1 p-4 overflow-y-auto chat-display-wrapper max-h-[calc(100vh-200px)] rounded-lg mb-4 md:ml-4" style={{ maxHeight: 'calc(100vh - 200px)' }}>
       {messages.map((msg, index) => (
         <div key={index} className={`mb-4 p-4 max-w-sm ${msg.sender === 'user' ? 'ml-auto user-message' : 'mr-auto ai-message'}`}>
           <div className="flex items-center mb-2 font-semibold">

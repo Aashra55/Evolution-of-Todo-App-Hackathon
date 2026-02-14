@@ -106,24 +106,50 @@ class TodoAgent:
         # Heuristic for complete_task
         if "complete task" in message_lower:
             try:
-                # Attempt to extract task ID or title
+                # First try to extract task ID (UUID format)
                 task_id_match = re.search(r"task id:\s*([a-f0-9-]+)", message_lower)
                 if task_id_match:
                     task_id = UUID(task_id_match.group(1))
                     result = self.tools["complete_task"](self.session, user_id, task_id)
                     return json.dumps(result)
-                else:
-                    # Fallback to try to find a task by title
-                    title_start = message_lower.find("complete the task '")
-                    if title_start != -1:
-                        title_end = message_lower.find("'", title_start + len("complete the task '"))
-                        if title_end != -1:
-                            task_title = message_content[title_start + len("complete the task '"):title_end]
-                            # In a real scenario, you'd need a way to resolve title to ID
-                            return json.dumps({"status": "error", "message": f"Tool call for 'complete_task' by title '{task_title}' not yet implemented. Please provide a task ID."})
-                    return json.dumps({"status": "error", "message": "Could not parse task ID or title for completion. Please specify 'complete task with ID: <uuid>' or by title if implemented."})
-            except ValueError:
-                 return json.dumps({"status": "error", "message": "Invalid UUID format for task ID."})
+                
+                # Try to extract task number (e.g., "complete task 1", "complete task 2")
+                task_number_match = re.search(r"complete task\s+(\d+)", message_lower)
+                if task_number_match:
+                    task_index = int(task_number_match.group(1)) - 1  # Convert to 0-based index
+                    # Get all pending tasks
+                    pending_tasks_result = self.tools["list_tasks"](self.session, user_id, completed=False)
+                    if isinstance(pending_tasks_result, dict) and pending_tasks_result.get("status") == "success":
+                        tasks = pending_tasks_result.get("tasks", [])
+                        if task_index >= 0 and task_index < len(tasks):
+                            task_id = int(tasks[task_index]["id"])
+                            result = self.tools["complete_task"](self.session, user_id, task_id)
+                            return json.dumps(result)
+                        else:
+                            return json.dumps({"status": "error", "message": f"Task number {task_index + 1} not found. You have {len(tasks)} pending task(s)."})
+                    else:
+                        return json.dumps({"status": "error", "message": "Could not retrieve tasks list."})
+                
+                # Fallback to try to find a task by title
+                title_start = message_lower.find("complete the task '")
+                if title_start != -1:
+                    title_end = message_lower.find("'", title_start + len("complete the task '"))
+                    if title_end != -1:
+                        task_title = message_content[title_start + len("complete the task '"):title_end]
+                        # Get all tasks and find by title
+                        all_tasks_result = self.tools["list_tasks"](self.session, user_id, completed=False)
+                        if isinstance(all_tasks_result, dict) and all_tasks_result.get("status") == "success":
+                            tasks = all_tasks_result.get("tasks", [])
+                            for task in tasks:
+                                if task.get("title", "").lower() == task_title.lower():
+                                    task_id = int(task["id"])
+                                    result = self.tools["complete_task"](self.session, user_id, task_id)
+                                    return json.dumps(result)
+                            return json.dumps({"status": "error", "message": f"Task with title '{task_title}' not found."})
+                
+                return json.dumps({"status": "error", "message": "Could not parse task ID or number for completion. Try 'complete task 1' or 'complete task with ID: <id>'."})
+            except ValueError as e:
+                 return json.dumps({"status": "error", "message": f"Invalid format: {str(e)}"})
             except Exception as e:
                 return json.dumps({"status": "error", "message": f"Error processing complete task command: {e}"})
         

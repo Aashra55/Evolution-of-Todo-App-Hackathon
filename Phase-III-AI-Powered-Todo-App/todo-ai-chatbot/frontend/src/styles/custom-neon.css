@@ -124,6 +124,28 @@ body {
     border: 1px solid var(--color-border);
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 200px);
+    scroll-behavior: smooth;
+}
+
+.chat-display-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-display-wrapper::-webkit-scrollbar-track {
+    background: var(--color-surface-secondary);
+    border-radius: 4px;
+}
+
+.chat-display-wrapper::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: 4px;
+}
+
+.chat-display-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
 }
 
 .user-message {

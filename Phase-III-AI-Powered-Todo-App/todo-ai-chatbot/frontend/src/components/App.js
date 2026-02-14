@@ -8,7 +8,20 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { FaRobot } from 'react-icons/fa'; // Import robot icon
 
-const USER_ID = uuidv4(); // Generate a unique user ID for this session
+// Get or create USER_ID from localStorage to persist across reloads
+const getOrCreateUserId = () => {
+  if (typeof window !== 'undefined') {
+    let userId = localStorage.getItem('todo_user_id');
+    if (!userId) {
+      userId = uuidv4();
+      localStorage.setItem('todo_user_id', userId);
+    }
+    return userId;
+  }
+  return uuidv4();
+};
+
+const USER_ID = getOrCreateUserId();
 const CONVERSATION_ID = uuidv4(); // Generate a unique conversation ID for this session
 
 function App() {
