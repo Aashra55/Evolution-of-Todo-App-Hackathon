@@ -1,7 +1,7 @@
 # backend/src/config/database.py
 import os
 from typing import Generator
-
+from dotenv import load_dotenv
 from sqlmodel import create_engine, Session, SQLModel
 
 # Import your models here to ensure they are registered with SQLModel metadata
@@ -9,16 +9,17 @@ from src.models.task import Task
 from src.models.conversation import Conversation
 from src.models.message import Message
 
+# Load environment variables from .env file
+load_dotenv()
+
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///todo_app.db")
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL)
 
 def create_db_and_tables():
     """Create database tables based on SQLModel metadata."""
-    # Drop all tables first to ensure clean schema (for development)
-    # In production, you'd want to use proper migrations instead
-    SQLModel.metadata.drop_all(engine)
-    # Create all tables with the current schema
+    # In production, you'd want to use proper migrations (e.g., with Alembic)
+    # instead of creating tables directly on startup.
     SQLModel.metadata.create_all(engine)
 
 def get_session() -> Generator[Session, None, None]:

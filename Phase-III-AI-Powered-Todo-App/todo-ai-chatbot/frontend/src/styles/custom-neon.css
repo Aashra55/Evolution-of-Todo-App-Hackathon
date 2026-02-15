@@ -98,14 +98,16 @@ body {
 }
 
 .task-item-pending {
-    background-color: var(--color-primary-bg);
-    border-left: 3px solid var(--color-primary);
+    background-color: #E8F2FC;
+    border-left: 4px solid #4A90E2;
+    border-radius: 6px;
 }
 
 .task-item-completed {
-    background-color: var(--color-surface-secondary);
-    border-left: 3px solid var(--color-text-light);
-    opacity: 0.7;
+    background-color: #F0F9F4;
+    border-left: 4px solid #28A745;
+    opacity: 0.85;
+    border-radius: 6px;
 }
 
 .task-title {
