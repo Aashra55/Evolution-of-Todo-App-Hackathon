@@ -33,7 +33,7 @@ add_task_tool_schema = {
                 "user_id": {
                     "type": "string",
                     "format": "uuid",
-                    "description": "The UUID of the user for whom the task is being added."
+                    "description": "The UUID of the user for whom the task is being added. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
                 },
                 "title": {
                     "type": "string",
@@ -44,7 +44,7 @@ add_task_tool_schema = {
                     "description": "(Optional) A detailed description of the task."
                 }
             },
-            "required": ["user_id", "title"]
+            "required": ["title"]  # user_id is automatically provided, don't require it from AI
         }
     }
 }

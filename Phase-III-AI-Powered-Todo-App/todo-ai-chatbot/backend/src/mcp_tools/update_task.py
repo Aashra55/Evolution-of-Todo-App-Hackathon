@@ -61,12 +61,11 @@ update_task_tool_schema = {
                 "user_id": {
                     "type": "string",
                     "format": "uuid",
-                    "description": "The UUID of the user who owns the task."
+                    "description": "The UUID of the user who owns the task. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
                 },
                 "task_id": {
-                    "type": "string",
-                    "format": "uuid",
-                    "description": "The UUID of the task to be updated."
+                    "type": ["string", "integer"],
+                    "description": "The ID of the task to be updated. This can be an integer ID or a string representation of the ID."
                 },
                 "title": {
                     "type": "string",
@@ -81,7 +80,7 @@ update_task_tool_schema = {
                     "description": "(Optional) The new completion status for the task (True for completed, False for pending)."
                 }
             },
-            "required": ["user_id", "task_id"]
+            "required": ["task_id"]  # user_id is automatically provided
         }
     }
 }

@@ -43,14 +43,14 @@ list_tasks_tool_schema = {
                 "user_id": {
                     "type": "string",
                     "format": "uuid",
-                    "description": "The UUID of the user whose tasks are to be listed."
+                    "description": "The UUID of the user whose tasks are to be listed. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
                 },
                 "completed": {
                     "type": "boolean",
                     "description": "(Optional) Filter tasks by their completion status. True for completed, False for pending. If omitted, lists all tasks."
                 }
             },
-            "required": ["user_id"]
+            "required": []  # user_id is automatically provided, don't require it from AI
         }
     }
 }

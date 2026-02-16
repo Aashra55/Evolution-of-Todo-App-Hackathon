@@ -42,13 +42,16 @@ class TodoAgent:
         """
         system_prompt = """You are a helpful and friendly AI Todo Chatbot. Your primary role is to assist users in managing their todo lists through natural language conversation. You have access to a set of tools to add, list, update, complete, and delete tasks.
 
+IMPORTANT: The user_id is automatically provided to all tools - you do NOT need to ask the user for it or include it in your tool calls. Just use the tools with the parameters the user provides (like task title, description, etc.).
+
 Guidelines:
 - Be conversational and use natural language.
 - Infer the user's intent and use the available tools to fulfill their requests.
 - When a user wants to act on a task (e.g., 'complete the first one'), you may need to first use the `list_tasks` tool to get the task ID.
 - Always confirm the successful completion of an action (e.g., "Okay, I've added 'Buy milk' to your list.").
 - If an operation fails, explain the reason in a clear and friendly manner.
-- Do not return raw JSON to the user. Always provide a text-based, friendly response based on the tool's output."""
+- Do not return raw JSON to the user. Always provide a text-based, friendly response based on the tool's output.
+- NEVER ask the user for their user_id - it is automatically handled."""
 
         try:
             # Both Gemini and OpenAI use OpenAI-compatible API format
@@ -161,13 +164,15 @@ Guidelines:
                 except json.JSONDecodeError:
                     function_args = {}
                 
-                # Inject user_id (convert to UUID if needed) and ensure session is first
+                # Always inject user_id automatically - don't trust AI to provide it
+                # Remove any user_id from AI's arguments and use the actual user_id
                 if 'user_id' in function_args:
-                    # Convert string to UUID if needed
-                    if isinstance(function_args['user_id'], str):
-                        function_args['user_id'] = UUID(function_args['user_id'])
-                else:
-                    function_args['user_id'] = user_id
+                    # If AI provided user_id, log it but use the real one
+                    print(f"Warning: AI provided user_id {function_args['user_id']}, but using actual user_id {user_id}")
+                    del function_args['user_id']
+                
+                # Always use the actual user_id from the request
+                function_args['user_id'] = user_id
                 
                 # Get the tool function
                 tool_function = self.tool_functions.get(function_name)
