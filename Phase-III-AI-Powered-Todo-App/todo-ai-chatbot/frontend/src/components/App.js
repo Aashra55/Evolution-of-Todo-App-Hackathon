@@ -46,49 +46,32 @@ function App() {
     setNotifications((prev) => prev.filter((note) => note.id !== id));
   };
 
-  // Function to fetch tasks from the backend
-  const fetchTasks = async () => {
+  // Function to fetch tasks directly from the backend API (without sending chat message)
+  const fetchTasks = async (silent = false) => {
     try {
-      // Simulate a command to list tasks for the agent
-      const response = await axios.post(`http://localhost:8000/api/${USER_ID}/chat`, {
-        message: "list all my tasks", // This message should trigger the list_tasks tool
-        conversation_id: CONVERSATION_ID
-      });
+      // Use direct tasks endpoint instead of chat endpoint
+      const response = await axios.get(`http://localhost:8000/api/${USER_ID}/tasks`);
       const data = response.data;
-      if (data.response) {
-        try {
-          const agentResponse = JSON.parse(data.response);
-          if (agentResponse.tasks && Array.isArray(agentResponse.tasks)) {
-            setTasks(agentResponse.tasks);
-            if (agentResponse.message) {
-              addNotification(agentResponse.message, 'success');
-            }
-          } else if (agentResponse.message) {
-             addNotification(agentResponse.message, agentResponse.status === 'success' ? 'success' : 'error');
-          }
-        } catch (e) {
-          // Response is not JSON (could be plain text error message or AI response)
-          // Silently handle this - don't show error notification for non-JSON responses
-          console.log("Agent response is not JSON (likely plain text):", data.response);
-          // Don't show error notification for plain text responses
+      if (data.status === 'success' && Array.isArray(data.tasks)) {
+        setTasks(data.tasks);
+        if (!silent && data.message) {
+          // Only show notification if not silent mode
+          console.log('Tasks fetched:', data.message);
         }
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      // Only show error if it's a real network error, not just a missing backend
-      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
-        // Backend might not be running yet, silently fail on initial load
-        console.log('Backend not available yet, will retry on user interaction');
-      } else {
+      // Silently fail on initial load or if backend is not ready
+      if (!silent && error.code !== 'ERR_NETWORK' && !error.message.includes('Network Error')) {
         const errorMessage = error.response?.data?.detail || error.message || 'Error fetching tasks from backend.';
         addNotification(`Error: ${errorMessage}`, 'error');
       }
     }
   };
 
-  // Initial fetch of tasks when component mounts
+  // Initial fetch of tasks when component mounts (silent mode - no notifications)
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(true); // Silent fetch on mount
   }, []);
 
   const handleSendMessage = async (text) => {
@@ -119,8 +102,11 @@ function App() {
         }
       }
 
-      // After sending a message, re-fetch tasks to update the panel
-      fetchTasks();
+      // After sending a message, re-fetch tasks to update the panel (silent mode)
+      // This ensures task panel updates after add/complete/delete operations
+      setTimeout(() => {
+        fetchTasks(true); // Silent fetch to update task panel
+      }, 500); // Small delay to ensure backend has processed the request
 
     } catch (error) {
       console.error('Error sending message:', error);
