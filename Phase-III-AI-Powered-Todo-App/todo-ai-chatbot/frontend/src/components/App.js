@@ -74,6 +74,22 @@ function App() {
     fetchTasks(true); // Silent fetch on mount
   }, []);
 
+  // Function to handle task checkbox toggle
+  const handleTaskToggle = async (taskId) => {
+    try {
+      const response = await axios.patch(`http://localhost:8000/api/${USER_ID}/tasks/${taskId}/toggle`);
+      if (response.data.status === 'success') {
+        // Refresh tasks after toggle
+        await fetchTasks(true); // Silent fetch
+        addNotification(response.data.message || 'Task status updated', 'success');
+      }
+    } catch (error) {
+      console.error('Error toggling task:', error);
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to update task status';
+      addNotification(`Error: ${errorMessage}`, 'error');
+    }
+  };
+
   const handleSendMessage = async (text) => {
     const newUserMessage = { sender: 'user', text: text };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
@@ -134,7 +150,7 @@ function App() {
         
         {/* Task Panel - Always visible below header on mobile, takes 1/3 width on desktop (right side) */}
         <aside className="w-full md:w-1/3 p-4 bg-white task-panel-section">
-          <TaskListPanel tasks={tasks} />
+          <TaskListPanel tasks={tasks} onTaskToggle={handleTaskToggle} userId={USER_ID} />
         </aside>
       </div>
       <Notifications notifications={notifications} removeNotification={removeNotification} />

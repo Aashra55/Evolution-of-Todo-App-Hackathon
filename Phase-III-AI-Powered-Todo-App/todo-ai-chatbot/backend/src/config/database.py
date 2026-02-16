@@ -12,6 +12,10 @@ from src.models.message import Message
 # Load environment variables from .env file
 load_dotenv()
 
+# Database URL - defaults to SQLite for local development
+# For Neon Serverless PostgreSQL, set DATABASE_URL in .env file:
+# DATABASE_URL=postgresql+asyncpg://user:password@host:port/database
+# Or: DATABASE_URL=postgresql://user:password@host:port/database
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///todo_app.db")
 
 engine = create_engine(DATABASE_URL)
