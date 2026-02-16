@@ -1,3 +1,7 @@
+import os
+# This environment variable must be set before google.protobuf is imported.
+os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +10,7 @@ from src.config.database import create_db_and_tables
 from src.config.logging import configure_logging
 from src.middleware.error_handler import ErrorHandlingMiddleware
 from src.api import chat
-from src.agent.init import openai_agent_manager
+from src.agent.init import agent_manager_instance # Use the new, dynamically-selected agent manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -14,7 +18,10 @@ async def lifespan(app: FastAPI):
     configure_logging()
     print("Application startup: Configuring logging, creating database tables...")
     create_db_and_tables()
-    await openai_agent_manager.initialize_assistant(instructions="You are an AI-powered Todo Chatbot.")
+    # The agent manager is now initialized in init.py based on ENV variables.
+    # No need to call an explicit initialize method here.
+    if not agent_manager_instance:
+        print("CRITICAL: AI Agent Manager failed to initialize. Check API keys.")
     yield
     # Shutdown events
     print("Application shutdown: Cleaning up resources...")

@@ -2,7 +2,6 @@
 import os
 import abc
 from dotenv import load_dotenv
-import google.generativeai as genai
 from openai import OpenAI
 from typing import List, Dict, Any, Optional
 
@@ -31,15 +30,25 @@ class AbstractAgentManager(abc.ABC):
         pass
 
 class GeminiAgentManager(AbstractAgentManager):
-    """Agent manager for Google Gemini."""
+    """Agent manager for Google Gemini using OpenAI-compatible API."""
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel(
-            model_name=os.getenv("GEMINI_MODEL", "gemini-1.5-pro-latest"),
+        # Use OpenAI-compatible API endpoint for Gemini
+        # The correct base URL for Gemini OpenAI-compatible API
+        # Format: https://generativelanguage.googleapis.com/v1beta/openai/
+        base_url = os.getenv("OPENAI_API_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+        
+        print(f"Initializing Gemini client with base_url: {base_url}")
+        
+        # For Gemini OpenAI-compatible API, pass API key to OpenAI client
+        # The client will use it in Authorization: Bearer <key> header
+        self.client = OpenAI(
+            api_key=api_key, 
+            base_url=base_url
         )
+        self.api_key = api_key
     
     def get_client(self) -> Any:
-        return self.model
+        return self.client
 
     async def process_chat_message(
         self, 
@@ -50,37 +59,25 @@ class GeminiAgentManager(AbstractAgentManager):
         tools: List[Dict[str, Any]],
         tool_schemas: List[Dict[str, Any]]
     ) -> str:
-        # Gemini uses the tools parameter directly in generate_content
-        chat_model = genai.GenerativeModel(
-            model_name=os.getenv("GEMINI_MODEL", "gemini-1.5-pro-latest"),
-            system_instruction=system_prompt,
-            tools=tool_schemas # Pass schemas here
-        )
-        
-        # Start a chat session (or retrieve existing one based on conversation_id)
-        chat = chat_model.start_chat()
-        
+        # This method is not used directly - TodoAgent handles the actual processing
+        # But we keep it for interface compatibility
         try:
-            # Send message to Gemini
-            response = chat.send_message(message_content)
-            
-            # Check for function calls
-            if response.candidates and response.candidates[0].content.parts:
-                for part in response.candidates[0].content.parts:
-                    if part.function_call:
-                        # Logic to handle function call will be in TodoAgent
-                        return response.text # Return the raw response for the agent to process
-                        
-            # If no function call, return the text response
-            return response.text
-
+            response = self.client.chat.completions.create(
+                model=os.getenv("GEMINI_MODEL", "gemini-1.5-flash"),
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": message_content}
+                ],
+                tools=tool_schemas,
+                tool_choice="auto",
+            )
+            return response.choices[0].message.content or "I received your message but couldn't generate a response."
         except Exception as e:
             error_msg = str(e)
             print(f"Gemini API error: {error_msg}")
-            if "api_key" in error_msg.lower():
-                # Provide a cleaner error message without command suggestions
+            if "api" in error_msg.lower() and "key" in error_msg.lower():
                 return "I'm having trouble connecting to the AI service. Please check your API key configuration."
-            return f"I encountered an error while processing your message: {error_msg}"
+            return "I encountered an error while processing your message. Please try again."
 
 
 class OpenAIAgentManager(AbstractAgentManager):
@@ -114,28 +111,35 @@ class OpenAIAgentManager(AbstractAgentManager):
         except Exception as e:
             error_msg = str(e)
             print(f"OpenAI API error: {error_msg}")
-            if "401" in error_msg or "invalid" in error_msg.lower() or "api key" in error_msg.lower():
-                 # Provide a cleaner error message without command suggestions
+            if "401" in error_msg or "invalid" in error_msg.lower() or "api" in error_msg.lower() and "key" in error_msg.lower():
                 return "I'm having trouble connecting to the AI service. Please check your API key configuration."
-            return f"I encountered an error while processing your message: {error_msg}"
+            return "I encountered an error while processing your message. Please try again."
 
 def get_agent_manager() -> AbstractAgentManager:
     """
     Factory function to get the appropriate agent manager based on environment variables.
-    Prioritizes Gemini if GEMINI_API_KEY is set.
+    Prioritizes Gemini if GEMINI_API_KEY is set, or auto-detects Gemini keys (starting with 'AIza').
     """
     gemini_key = os.getenv("GEMINI_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
 
+    # Priority 1: Explicit GEMINI_API_KEY
     if gemini_key:
-        print("Initializing Gemini Agent Manager.")
+        print("Initializing Gemini Agent Manager (from GEMINI_API_KEY).")
         return GeminiAgentManager(api_key=gemini_key)
-    elif openai_key:
+    
+    # Priority 2: Auto-detect Gemini keys in OPENAI_API_KEY (they start with "AIza")
+    if openai_key and openai_key.startswith("AIza"):
+        print("Detected Gemini API key in OPENAI_API_KEY. Initializing Gemini Agent Manager.")
+        return GeminiAgentManager(api_key=openai_key)
+    
+    # Priority 3: Regular OpenAI key
+    if openai_key:
         print("Initializing OpenAI Agent Manager.")
         return OpenAIAgentManager(api_key=openai_key)
-    else:
-        # This will be caught on startup by FastAPI
-        raise ValueError("No AI provider key found. Please set either GEMINI_API_KEY or OPENAI_API_KEY.")
+    
+    # No key found
+    raise ValueError("No AI provider key found. Please set either GEMINI_API_KEY or OPENAI_API_KEY.")
 
 # Single instance of the agent manager, determined by the factory.
 try:
