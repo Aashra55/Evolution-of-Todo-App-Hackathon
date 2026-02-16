@@ -7,6 +7,7 @@ from src.config.database import get_session
 from src.mcp_tools.list_tasks import list_tasks
 from src.mcp_tools.complete_task import complete_task
 from src.mcp_tools.update_task import update_task
+from src.mcp_tools.delete_task import delete_task
 
 router = APIRouter()
 
@@ -104,4 +105,42 @@ async def toggle_task_endpoint(
         error_trace = traceback.format_exc()
         print(f"Error in toggle task endpoint: {error_trace}")
         raise HTTPException(status_code=500, detail=f"Error toggling task: {str(e)}")
+
+@router.delete("/{user_id}/tasks/{task_id}")
+async def delete_task_endpoint(
+    user_id: str,
+    task_id: str,
+    session: Session = Depends(get_session)
+):
+    """
+    Deletes a task for a user.
+    """
+    try:
+        try:
+            user_uuid = UUID(user_id)
+            task_id_int = int(task_id)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Invalid ID format: {str(e)}")
+
+        result = delete_task(
+            session=session,
+            user_id=user_uuid,
+            task_id=task_id_int
+        )
+        
+        if result.get("status") == "error":
+            raise HTTPException(status_code=500, detail=result.get("message", "Failed to delete task"))
+        
+        return {
+            "status": "success",
+            "message": result.get("message", "Task deleted successfully"),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        session.rollback()
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"Error in delete task endpoint: {error_trace}")
+        raise HTTPException(status_code=500, detail=f"Error deleting task: {str(e)}")
 

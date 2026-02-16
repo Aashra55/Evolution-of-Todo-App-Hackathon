@@ -9,10 +9,8 @@ def delete_task(session: Session, user_id: UUID, task_id: Union[UUID, str, int])
     Deletes a todo task for a user.
     """
     try:
-        # Convert UUID to string for user_id
         user_id_str = str(user_id)
         
-        # Convert task_id to int (handle UUID, string, or int)
         if isinstance(task_id, UUID):
             task_id_str = str(task_id).replace('-', '')
             try:
@@ -40,8 +38,6 @@ def delete_task(session: Session, user_id: UUID, task_id: Union[UUID, str, int])
         session.rollback()
         return {"status": "error", "message": f"Failed to delete task: {e}"}
 
-# This dictionary defines the schema for the delete_task tool,
-# which can be used by the OpenAI Agent to understand how to call this function.
 delete_task_tool_schema = {
     "type": "function",
     "function": {
@@ -60,7 +56,7 @@ delete_task_tool_schema = {
                     "description": "The ID of the task to be deleted. This can be an integer ID or a string representation of the ID."
                 }
             },
-            "required": ["task_id"]  # user_id is automatically provided
+            "required": ["task_id"]
         }
     }
 }

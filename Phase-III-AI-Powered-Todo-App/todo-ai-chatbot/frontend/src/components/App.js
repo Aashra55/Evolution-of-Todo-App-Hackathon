@@ -90,6 +90,22 @@ function App() {
     }
   };
 
+  // Function to handle task deletion
+  const handleTaskDelete = async (taskId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8000/api/${USER_ID}/tasks/${taskId}`);
+      if (response.data.status === 'success') {
+        // Refresh tasks after delete
+        await fetchTasks(true); // Silent fetch
+        addNotification(response.data.message || 'Task deleted successfully', 'success');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to delete task';
+      addNotification(`Error: ${errorMessage}`, 'error');
+    }
+  };
+
   const handleSendMessage = async (text) => {
     const newUserMessage = { sender: 'user', text: text };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
@@ -150,7 +166,7 @@ function App() {
         
         {/* Task Panel - Always visible below header on mobile, takes 1/3 width on desktop (right side) */}
         <aside className="w-full md:w-1/3 p-4 bg-white task-panel-section">
-          <TaskListPanel tasks={tasks} onTaskToggle={handleTaskToggle} userId={USER_ID} />
+          <TaskListPanel tasks={tasks} onTaskToggle={handleTaskToggle} onTaskDelete={handleTaskDelete} userId={USER_ID} />
         </aside>
       </div>
       <Notifications notifications={notifications} removeNotification={removeNotification} />

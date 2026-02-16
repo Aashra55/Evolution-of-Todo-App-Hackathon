@@ -1,8 +1,9 @@
 // frontend/src/components/TaskListPanel.js
 import React from 'react';
 import axios from 'axios';
+import { FaTrash } from 'react-icons/fa';
 
-function TaskListPanel({ tasks, onTaskToggle, userId }) {
+function TaskListPanel({ tasks, onTaskToggle, onTaskDelete, userId }) {
   const pendingTasks = tasks.filter(task => !task.completed);
   const completedTasks = tasks.filter(task => task.completed);
 
@@ -30,6 +31,14 @@ function TaskListPanel({ tasks, onTaskToggle, userId }) {
                     <strong className="task-title block mb-1 text-gray-800 font-semibold">{task.title}</strong>
                     {task.description && <p className="text-sm text-gray-600 mt-1">{task.description}</p>}
                   </div>
+                  <button
+                    onClick={() => onTaskDelete && onTaskDelete(task.id)}
+                    className="ml-2 p-1 text-red-500 hover:text-red-700 transition-colors focus:outline-none"
+                    aria-label={`Delete "${task.title}"`}
+                    title="Delete task"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               </li>
             ))}
@@ -63,6 +72,14 @@ function TaskListPanel({ tasks, onTaskToggle, userId }) {
                     <strong className="task-title task-title-completed block mb-1 text-gray-600 line-through">{task.title}</strong>
                     {task.description && <p className="text-sm text-gray-500 mt-1 line-through">{task.description}</p>}
                   </div>
+                  <button
+                    onClick={() => onTaskDelete && onTaskDelete(task.id)}
+                    className="ml-2 p-1 text-red-500 hover:text-red-700 transition-colors focus:outline-none"
+                    aria-label={`Delete "${task.title}"`}
+                    title="Delete task"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               </li>
             ))}
