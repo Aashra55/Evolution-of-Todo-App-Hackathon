@@ -1,39 +1,22 @@
 # backend/src/mcp_tools/delete_task.py
 from typing import Dict, Any, Union
-from uuid import UUID
 from sqlmodel import Session, select
 from src.models.task import Task
 
-def delete_task(session: Session, user_id: UUID, task_id: Union[UUID, str, int]) -> Dict[str, Any]:
+def delete_task(session: Session, user_id: int, task_id: int) -> Dict[str, Any]:
     """
     Deletes a todo task for a user.
     """
     try:
-        user_id_str = str(user_id)
+        task_id_int = task_id
         
-        if isinstance(task_id, UUID):
-            task_id_str = str(task_id).replace('-', '')
-            try:
-                task_id_int = int(task_id_str, 16) if len(task_id_str) > 10 else int(task_id_str)
-            except ValueError:
-                return {"status": "error", "message": f"Invalid task ID format: {task_id}. Expected integer."}
-        elif isinstance(task_id, str):
-            try:
-                task_id_int = int(task_id)
-            except ValueError:
-                return {"status": "error", "message": f"Invalid task ID format: {task_id}. Expected integer."}
-        elif isinstance(task_id, int):
-            task_id_int = task_id
-        else:
-            return {"status": "error", "message": f"Invalid task ID type: {type(task_id)}. Expected integer."}
-        
-        task = session.exec(select(Task).where(Task.user_id == user_id_str, Task.id == task_id_int)).first()
+        task = session.exec(select(Task).where(Task.user_id == user_id, Task.id == task_id_int)).first()
         if not task:
             return {"status": "error", "message": f"Task with ID {task_id} not found for user {user_id}."}
         
         session.delete(task)
         session.commit()
-        return {"status": "success", "message": f"Task '{task.title}' deleted successfully.", "task_id": str(task.id)}
+        return {"status": "success", "message": f"Task '{task.title}' deleted successfully.", "task_id": task.id}
     except Exception as e:
         session.rollback()
         return {"status": "error", "message": f"Failed to delete task: {e}"}
@@ -47,13 +30,12 @@ delete_task_tool_schema = {
             "type": "object",
             "properties": {
                 "user_id": {
-                    "type": "string",
-                    "format": "uuid",
-                    "description": "The UUID of the user who owns the task. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
+                    "type": "integer",
+                    "description": "The ID of the user who owns the task. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
                 },
                 "task_id": {
-                    "type": ["string", "integer"],
-                    "description": "The ID of the task to be deleted. This can be an integer ID or a string representation of the ID."
+                    "type": "integer",
+                    "description": "The ID of the task to be deleted."
                 }
             },
             "required": ["task_id"]

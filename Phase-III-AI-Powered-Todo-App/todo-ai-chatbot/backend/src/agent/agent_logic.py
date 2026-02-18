@@ -2,7 +2,6 @@
 import json
 import os
 from typing import Dict, Any, List
-from uuid import UUID
 
 from fastapi import Depends, HTTPException
 from sqlmodel import Session
@@ -36,7 +35,7 @@ class TodoAgent:
             update_task_tool_schema
         ]
 
-    async def process_chat_message(self, user_id: UUID, conversation_id: UUID, message_content: str) -> str:
+    async def process_chat_message(self, user_id: int, message_content: str) -> str:
         """
         Processes a chat message using the configured AI, intelligently deciding which tools to use.
         """

@@ -1,23 +1,20 @@
 # backend/src/mcp_tools/list_tasks.py
 from typing import Dict, Any, List, Optional
-from uuid import UUID
 from sqlmodel import Session, select
 from src.models.task import Task
 
-def list_tasks(session: Session, user_id: UUID, completed: Optional[bool] = None) -> Dict[str, Any]:
+def list_tasks(session: Session, user_id: int, completed: Optional[bool] = None) -> Dict[str, Any]:
     """
     Lists todo tasks for a user, optionally filtering by completion status.
     """
     try:
-        # Convert UUID to string for user_id
-        user_id_str = str(user_id)
-        query = select(Task).where(Task.user_id == user_id_str)
+        query = select(Task).where(Task.user_id == user_id)
         if completed is not None:
             query = query.where(Task.completed == completed)
         
         tasks = session.exec(query).all()
         
-        task_list = [{"id": str(task.id), "title": task.title, "description": task.description, "completed": task.completed} for task in tasks]
+        task_list = [{"id": task.id, "title": task.title, "description": task.description, "completed": task.completed} for task in tasks]
         
         status_message = "All tasks listed."
         if completed is True:
@@ -41,9 +38,8 @@ list_tasks_tool_schema = {
             "type": "object",
             "properties": {
                 "user_id": {
-                    "type": "string",
-                    "format": "uuid",
-                    "description": "The UUID of the user whose tasks are to be listed. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
+                    "type": "integer",
+                    "description": "The ID of the user whose tasks are to be listed. This is automatically provided - you should NOT ask the user for it or include it in your tool calls."
                 },
                 "completed": {
                     "type": "boolean",

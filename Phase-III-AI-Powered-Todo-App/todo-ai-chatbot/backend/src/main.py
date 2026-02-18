@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.config.database import create_db_and_tables
 from src.config.logging import configure_logging
 from src.middleware.error_handler import ErrorHandlingMiddleware
-from src.api import chat, tasks
+from src.api import chat, tasks, auth_routes
 from src.agent.init import agent_manager_instance # Use the new, dynamically-selected agent manager
 
 @asynccontextmanager
@@ -43,6 +43,7 @@ app.add_middleware(ErrorHandlingMiddleware)
 # Include routers
 app.include_router(chat.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
+app.include_router(auth_routes.router, prefix="/api")
 
 @app.get("/")
 async def root():

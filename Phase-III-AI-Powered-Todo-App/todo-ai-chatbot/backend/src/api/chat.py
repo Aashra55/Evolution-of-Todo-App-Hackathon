@@ -1,22 +1,26 @@
 # backend/src/api/chat.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from uuid import UUID
-from sqlmodel import Session
+from sqlmodel import Session, select
+from typing import Optional
 
+from src.auth import get_current_active_user
 from src.agent.agent_logic import get_todo_agent, TodoAgent
 from src.config.database import get_session
+from src.models.user import User
+from src.models.conversation import Conversation
+import uuid
 
 router = APIRouter()
 
 class ChatRequest(BaseModel):
     message: str
-    conversation_id: str
+    conversation_id: Optional[str] = None # Make conversation_id optional
 
-@router.post("/{user_id}/chat")
+@router.post("/chat")
 async def chat_endpoint(
-    user_id: str,
     request: ChatRequest,
+    current_user: User = Depends(get_current_active_user),
     todo_agent: TodoAgent = Depends(get_todo_agent),
     session: Session = Depends(get_session)
 ):
@@ -24,18 +28,28 @@ async def chat_endpoint(
     Chat endpoint that processes user messages using the TodoAgent.
     """
     try:
-        # Convert string IDs to UUIDs
-        try:
-            user_uuid = UUID(user_id)
-            conversation_uuid = UUID(request.conversation_id)
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid UUID format: {str(e)}")
+        # Get or create conversation
+        if request.conversation_id:
+            conversation_db = session.exec(
+                select(Conversation).where(
+                    Conversation.id == request.conversation_id,
+                    Conversation.user_id == current_user.id
+                )
+            ).first()
+        else:
+            conversation_db = None
+
+        if not conversation_db:
+            conversation_db = Conversation(user_id=current_user.id)
+            session.add(conversation_db)
+            session.commit()
+            session.refresh(conversation_db)
         
         # Process the message using TodoAgent
-        print(f"Processing chat message: user_id={user_id}, conversation_id={request.conversation_id}, message={request.message}")
+        print(f"Processing chat message: user_id={current_user.id}, conversation_id={conversation_db.id}, message={request.message}")
         agent_response = await todo_agent.process_chat_message(
-            user_id=user_uuid,
-            conversation_id=conversation_uuid,
+            user_id=current_user.id,
+            conversation_id=conversation_db.id, # Pass integer ID
             message_content=request.message
         )
         
@@ -48,8 +62,8 @@ async def chat_endpoint(
             agent_response = "I received your message but couldn't generate a response. Please try again."
         
         return {
-            "user_id": user_id,
-            "conversation_id": request.conversation_id,
+            "user_id": current_user.id,
+            "conversation_id": conversation_db.id,
             "response": agent_response
         }
     except Exception as e:
