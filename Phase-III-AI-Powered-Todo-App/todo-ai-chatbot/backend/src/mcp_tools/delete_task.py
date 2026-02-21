@@ -1,18 +1,18 @@
 # backend/src/mcp_tools/delete_task.py
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 from sqlmodel import Session, select
 from src.models.task import Task
+from src.mcp_tools.utils import find_task
 
-def delete_task(session: Session, user_id: int, task_id: int) -> Dict[str, Any]:
+def delete_task(session: Session, user_id: int, task_id: Optional[int] = None, task_name: Optional[str] = None) -> Dict[str, Any]:
     """
     Deletes a todo task for a user.
     """
     try:
-        task_id_int = task_id
-        
-        task = session.exec(select(Task).where(Task.user_id == user_id, Task.id == task_id_int)).first()
+        task = find_task(session, user_id, task_id, task_name)
         if not task:
-            return {"status": "error", "message": f"Task with ID {task_id} not found for user {user_id}."}
+            identifier = f"ID {task_id}" if task_id else f"name '{task_name}'"
+            return {"status": "error", "message": f"Task with {identifier} not found for user {user_id}."}
         
         session.delete(task)
         session.commit()
@@ -25,7 +25,7 @@ delete_task_tool_schema = {
     "type": "function",
     "function": {
         "name": "delete_task",
-        "description": "Deletes a specific todo task for a user.",
+        "description": "Deletes a specific todo task for a user. You can provide either task_id or task_name.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -35,10 +35,17 @@ delete_task_tool_schema = {
                 },
                 "task_id": {
                     "type": "integer",
-                    "description": "The ID of the task to be deleted."
+                    "description": "(Optional) The ID of the task to be deleted."
+                },
+                "task_name": {
+                    "type": "string",
+                    "description": "(Optional) The title or name of the task to be deleted."
                 }
             },
-            "required": ["task_id"]
+            "anyOf": [
+                {"required": ["task_id"]},
+                {"required": ["task_name"]}
+            ]
         }
     }
 }

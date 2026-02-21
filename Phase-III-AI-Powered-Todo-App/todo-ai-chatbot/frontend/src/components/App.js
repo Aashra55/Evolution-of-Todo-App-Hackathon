@@ -46,12 +46,15 @@ function App() {
   const [tasks, setTasks] = useState([]); // State to hold tasks
   const [notifications, setNotifications] = useState([]); // State to hold notifications
   const [showChatModal, setShowChatModal] = useState(false); // State to control chat modal visibility
+  const [isReady, setIsReady] = useState(false); // New state to track hydration/auth check readiness
   const router = useRouter();
 
   // Effect to check authentication status
   useEffect(() => {
     if (!authService.isAuthenticated()) {
       router.push('/login');
+    } else {
+      setIsReady(true);
     }
   }, [router]);
 
@@ -171,8 +174,8 @@ function App() {
     router.push('/login');
   };
 
-  if (!authService.isAuthenticated()) {
-    return null; // Don't render anything if not authenticated, as it will redirect
+  if (!isReady) {
+    return null; // Don't render until authentication status is confirmed on client side
   }
 
   return (

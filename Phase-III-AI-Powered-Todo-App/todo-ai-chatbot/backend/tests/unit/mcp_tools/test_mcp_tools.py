@@ -81,6 +81,55 @@ def test_delete_task(session: Session):
     task_in_db = session.get(Task, task_id)
     assert task_in_db is None
 
+def test_complete_task_by_name(session: Session):
+    user_id = 1
+    add_result = add_task(session, user_id, "Buy Milk")
+    task_id = int(add_result["task_id"])
+
+    # Complete by name
+    complete_result = complete_task(session, user_id, task_name="Buy Milk")
+    assert complete_result["status"] == "success"
+    assert "marked as completed" in complete_result["message"]
+
+    task_in_db = session.get(Task, task_id)
+    assert task_in_db.completed is True
+
+def test_complete_task_by_partial_name(session: Session):
+    user_id = 1
+    add_result = add_task(session, user_id, "Wash the car")
+    task_id = int(add_result["task_id"])
+
+    # Complete by partial name
+    complete_result = complete_task(session, user_id, task_name="Wash")
+    assert complete_result["status"] == "success"
+    assert "marked as completed" in complete_result["message"]
+
+    task_in_db = session.get(Task, task_id)
+    assert task_in_db.completed is True
+
+def test_delete_task_by_name(session: Session):
+    user_id = 1
+    add_result = add_task(session, user_id, "Task to delete")
+    task_id = int(add_result["task_id"])
+
+    delete_result = delete_task(session, user_id, task_name="Task to delete")
+    assert delete_result["status"] == "success"
+    assert "deleted successfully" in delete_result["message"]
+
+    task_in_db = session.get(Task, task_id)
+    assert task_in_db is None
+
+def test_update_task_by_name(session: Session):
+    user_id = 1
+    add_result = add_task(session, user_id, "Original Title")
+    task_id = int(add_result["task_id"])
+
+    update_result = update_task(session, user_id, task_name="Original Title", title="Updated Title")
+    assert update_result["status"] == "success"
+    
+    task_in_db = session.get(Task, task_id)
+    assert task_in_db.title == "Updated Title"
+
 def test_update_task(session: Session):
     user_id = 1
     add_result = add_task(session, user_id, "Original Title", "Original Description")

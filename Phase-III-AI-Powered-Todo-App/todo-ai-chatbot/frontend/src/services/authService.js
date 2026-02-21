@@ -25,7 +25,9 @@ const authService = {
         }
       });
       const { access_token } = response.data;
-      localStorage.setItem('access_token', access_token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('access_token', access_token);
+      }
       return response.data;
     } catch (error) {
       throw error.response?.data?.detail || error.message;
@@ -33,12 +35,17 @@ const authService = {
   },
 
   logout() {
-    localStorage.removeItem('access_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+    }
     // Optionally, clear other user-related data from local storage
   },
 
   getAccessToken() {
-    return localStorage.getItem('access_token');
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('access_token');
+    }
+    return null;
   },
 
   isAuthenticated() {

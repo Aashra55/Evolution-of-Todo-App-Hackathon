@@ -2,17 +2,17 @@
 from typing import Dict, Any, Optional, Union
 from sqlmodel import Session, select
 from src.models.task import Task
+from src.mcp_tools.utils import find_task
 
-def update_task(session: Session, user_id: int, task_id: int, title: Optional[str] = None, description: Optional[str] = None, completed: Optional[bool] = None) -> Dict[str, Any]:
+def update_task(session: Session, user_id: int, task_id: Optional[int] = None, task_name: Optional[str] = None, title: Optional[str] = None, description: Optional[str] = None, completed: Optional[bool] = None) -> Dict[str, Any]:
     """
     Updates an existing todo task for a user.
     """
     try:
-        task_id_int = task_id
-        
-        task = session.exec(select(Task).where(Task.user_id == user_id, Task.id == task_id_int)).first()
+        task = find_task(session, user_id, task_id, task_name)
         if not task:
-            return {"status": "error", "message": f"Task with ID {task_id} not found for user {user_id}."}
+            identifier = f"ID {task_id}" if task_id else f"name '{task_name}'"
+            return {"status": "error", "message": f"Task with {identifier} not found for user {user_id}."}
         
         if title is not None:
             task.title = title
@@ -35,7 +35,7 @@ update_task_tool_schema = {
     "type": "function",
     "function": {
         "name": "update_task",
-        "description": "Updates an existing todo task for a specific user. At least one of title, description, or completed must be provided.",
+        "description": "Updates an existing todo task for a specific user. At least one of title, description, or completed must be provided. You can identify the task using either task_id or task_name.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -45,7 +45,11 @@ update_task_tool_schema = {
                 },
                 "task_id": {
                     "type": "integer",
-                    "description": "The ID of the task to be updated."
+                    "description": "(Optional) The ID of the task to be updated."
+                },
+                "task_name": {
+                    "type": "string",
+                    "description": "(Optional) The title or name of the task to be updated."
                 },
                 "title": {
                     "type": "string",
@@ -60,7 +64,10 @@ update_task_tool_schema = {
                     "description": "(Optional) The new completion status for the task (True for completed, False for pending)."
                 }
             },
-            "required": ["task_id"]
+            "anyOf": [
+                {"required": ["task_id"]},
+                {"required": ["task_name"]}
+            ]
         }
     }
 }
