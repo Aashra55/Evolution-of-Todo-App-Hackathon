@@ -6,10 +6,10 @@ from sqlalchemy.sql import func
 
 class Message(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    role: str = Field(sa_column=Column(String))  # "user", "assistant", "tool"
-    content: str = Field(sa_column=Column(String))
+    role: str = Field(sa_column=Column(String, nullable=False))  # "user", "assistant", "tool"
+    content: str = Field(sa_column=Column(String, nullable=False))
     created_at: datetime = Field(
-        sa_column=Column(DateTime, server_default=func.now()),
+        sa_column=Column(DateTime, server_default=func.now(), nullable=False),
         default_factory=datetime.utcnow
     )
 

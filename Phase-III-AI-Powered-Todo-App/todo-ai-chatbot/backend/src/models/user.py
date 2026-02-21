@@ -1,5 +1,5 @@
 # backend/src/models/user.py
-from typing import List
+from typing import List, Optional
 from sqlmodel import SQLModel, Field, Relationship
 
 class User(SQLModel, table=True):

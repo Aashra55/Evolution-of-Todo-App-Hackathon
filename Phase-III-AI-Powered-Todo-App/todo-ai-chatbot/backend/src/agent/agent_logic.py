@@ -35,7 +35,7 @@ class TodoAgent:
             update_task_tool_schema
         ]
 
-    async def process_chat_message(self, user_id: int, message_content: str) -> str:
+    async def process_chat_message(self, user_id: int, message_content: str, conversation_id: int = None) -> str:
         """
         Processes a chat message using the configured AI, intelligently deciding which tools to use.
         """

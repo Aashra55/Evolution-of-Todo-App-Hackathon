@@ -10,11 +10,11 @@ class Task(SQLModel, table=True):
     description: Optional[str] = Field(default=None, index=True)
     completed: bool = Field(default=False)
     created_at: datetime = Field(
-        sa_column=Column(DateTime, server_default=func.now()),
+        sa_column=Column(DateTime, server_default=func.now(), nullable=False),
         default_factory=datetime.utcnow
     )
     updated_at: datetime = Field(
-        sa_column=Column(DateTime, server_default=func.now(), onupdate=func.now()),
+        sa_column=Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False),
         default_factory=datetime.utcnow
     )
     
